@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2d88a6fa-6bb5-42a6-acc1-d4c6556abe4f"
+      }
+    },
+    "owner": "priya160729"
   }
 }
