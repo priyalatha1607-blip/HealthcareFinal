@@ -8,7 +8,7 @@ import SignUp from '../../screens/SignUp';
 import MainTabNavigator from './MainTabNavigator';
 import ForgotPassword from '../../screens/ForgotPassword';
 import BookAppointmentScreen from '../../screens/BookAppointmentScreen';
-import AboutUsScreen from '../../screens/AboutUsScreen';
+
 import NotificationsScreen from '../../screens/NotificationsScreen';
 import SettingsScreen from '../../screens/SettingsScreen';
 import HelpSupportScreen from '../../screens/HelpSupportScreen';
@@ -26,11 +26,7 @@ export default function AppNavigator() {
       <Stack.Screen name="HomeScreen" component={MainTabNavigator} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="BookAppointment" component={BookAppointmentScreen} />
-      <Stack.Screen 
-        name="AboutUs" 
-        component={AboutUsScreen} 
-        options={{ headerShown: false }}
-      />
+      
       <Stack.Screen 
         name="Notifications" 
         component={NotificationsScreen} 
