@@ -1,49 +1,110 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../components/navigation/types';
+import { useNavigation } from '@react-navigation/native';
 
 const allDoctors = [
-  { id: '1', name: 'Dr. Jane Smith', specialty: 'Cardiologist', rating: '4.9', reviews: 120, image: 'https://i.pravatar.cc/150?img=47' },
-  { id: '2', name: 'Dr. Mark Davis', specialty: 'Dentist', rating: '4.8', reviews: 85, image: 'https://i.pravatar.cc/150?img=11' },
-  { id: '3', name: 'Dr. Emily Chen', specialty: 'Pediatrician', rating: '4.7', reviews: 200, image: 'https://i.pravatar.cc/150?img=32' },
-  { id: '4', name: 'Dr. Michael Brown', specialty: 'Neurologist', rating: '4.9', reviews: 150, image: 'https://i.pravatar.cc/150?img=59' },
-  { id: '5', name: 'Dr. Sarah Wilson', specialty: 'Orthopedist', rating: '4.6', reviews: 90, image: 'https://i.pravatar.cc/150?img=44' },
-  { id: '6', name: 'Dr. David Lee', specialty: 'Ophthalmologist', rating: '4.8', reviews: 110, image: 'https://i.pravatar.cc/150?img=60' },
-  { id: '7', name: 'Dr. Lisa Wong', specialty: 'Dermatologist', rating: '4.7', reviews: 130, image: 'https://i.pravatar.cc/150?img=45' },
-  { id: '8', name: 'Dr. Robert Taylor', specialty: 'General Surgeon', rating: '4.5', reviews: 75, image: 'https://i.pravatar.cc/150?img=53' },
+  { id: '1', name: 'Dr. Abu Saifuddin', position: 'Assistant Professor', specialty: 'Neuromedicine', degree: 'MD , M.PHIL, PHD', image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=150&h=150&fit=crop', searchTerms: ['brain', 'neuromedicine', 'neurologist'] },
+  { id: '2', name: 'Dr. James Merry', position: 'Assistant Professor', specialty: 'Gynae and Obs', degree: 'MD ,M.PHIL, PHD', image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop', searchTerms: ['gynae', 'obstetrics'] },
+  { id: '3', name: 'Dr. William Henry', position: 'Assistant Professor', specialty: 'Brain Tumor', degree: 'MD ,M.PHIL, PHD', image: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=150&h=150&fit=crop', searchTerms: ['brain', 'tumor'] },
+  { id: '4', name: 'Dr. Jane Smith', position: 'Senior Consultant', specialty: 'Cardiologist', degree: 'MBBS, MD', image: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=150&h=150&fit=crop', searchTerms: ['heart', 'cardiologist'] },
+  { id: '5', name: 'Dr. Michael Brown', position: 'Consultant', specialty: 'Neurologist', degree: 'MBBS, MD, DM', image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&h=150&fit=crop', searchTerms: ['brain', 'neurologist'] },
+  { id: '6', name: 'Dr. Mark Davis', position: 'Senior Dentist', specialty: 'Dentist', degree: 'BDS, MDS', image: 'https://images.unsplash.com/photo-1582750433449-648ed127d09e?w=150&h=150&fit=crop', searchTerms: ['dental', 'dentist', 'teeth'] },
+  { id: '7', name: 'Dr. Emily Chen', position: 'Consultant', specialty: 'Ophthalmologist', degree: 'MBBS, MS', image: 'https://images.unsplash.com/photo-1527613426441-4da17471b66d?w=150&h=150&fit=crop', searchTerms: ['eye', 'ophthalmologist', 'vision'] },
+  { id: '8', name: 'Dr. Sarah Wilson', position: 'Orthopedic Surgeon', specialty: 'Orthopedist', degree: 'MBBS, MS Ortho', image: 'https://images.unsplash.com/photo-1614608682850-e0d6ed316d47?w=150&h=150&fit=crop', searchTerms: ['bone', 'orthopedist', 'ortho'] },
+  { id: '9', name: 'Dr. David Lee', position: 'Consultant Dentist', specialty: 'Orthodontist', degree: 'BDS, MDS', image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop', searchTerms: ['dental', 'dentist'] },
+  { id: '10', name: 'Dr. Robert Taylor', position: 'Senior Cardiologist', specialty: 'Cardiologist', degree: 'MBBS, MD', image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=150&h=150&fit=crop', searchTerms: ['heart', 'cardiologist'] },
 ];
 
-export default function DoctorScreen() {
+export default function DoctorScreen({ route }: any) {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    if (route?.params?.category) {
+      setSearchQuery(route.params.category);
+    }
+  }, [route?.params?.category]);
+
+  const filteredDoctors = allDoctors.filter(doc => {
+    const query = searchQuery.toLowerCase();
+    if (!query) return true;
+    return (
+      doc.name.toLowerCase().includes(query) ||
+      doc.specialty.toLowerCase().includes(query) ||
+      (doc.searchTerms && doc.searchTerms.some(term => term.includes(query)))
+    );
+  });
+
   const renderDoctor = ({ item: doc }: any) => (
-    <TouchableOpacity style={styles.doctorCard}>
-      <Image source={{ uri: doc.image }} style={styles.doctorImageLarge} />
-      <View style={styles.ratingBadge}>
-        <MaterialCommunityIcons name="star" size={12} color="#F5B041" />
-        <Text style={styles.ratingText}>{doc.rating}</Text>
+    <View style={styles.doctorCard}>
+      <View style={styles.doctorInfoContainer}>
+        <Image source={{ uri: doc.image }} style={styles.doctorImage} />
+        <View style={styles.doctorDetails}>
+          <Text style={styles.doctorName}>{doc.name}</Text>
+          <Text style={styles.doctorSubText}>{doc.position}</Text>
+          <Text style={styles.doctorSubText}>{doc.specialty}</Text>
+          <Text style={styles.doctorSubText}>{doc.degree}</Text>
+        </View>
       </View>
-      <Text style={styles.doctorCardName} numberOfLines={1}>{doc.name}</Text>
-      <Text style={styles.doctorCardSpecialty}>{doc.specialty}</Text>
-    </TouchableOpacity>
+      <View style={styles.actionButtonsContainer}>
+        <TouchableOpacity 
+          style={styles.appointmentButton}
+          onPress={() => navigation.navigate('BookAppointment')}
+        >
+          <Text style={styles.appointmentText}>Appointment</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top']}>
+      {/* Header */}
       <View style={styles.header}>
-        <View style={styles.logoContainer}>
-          <MaterialCommunityIcons name="heart-pulse" size={32} color="#00796B" style={styles.logoIcon} />
-          <Text style={styles.headerTitle}>All Doctors</Text>
-        </View>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <MaterialCommunityIcons name="arrow-left" size={24} color="#fff" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Doctor List</Text>
+        <View style={{ width: 24 }} /> {/* Placeholder for spacing */}
       </View>
-      <FlatList
-        data={allDoctors}
-        keyExtractor={(item) => item.id}
-        renderItem={renderDoctor}
-        numColumns={2}
-        contentContainerStyle={styles.listContainer}
-        columnWrapperStyle={styles.columnWrapper}
-        showsVerticalScrollIndicator={false}
-      />
+
+      <View style={styles.container}>
+        {/* Search Bar */}
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Doctors, Clinics ,labs"
+            placeholderTextColor="#999"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+        </View>
+
+        {/* Doctor List */}
+        <FlatList
+          data={filteredDoctors}
+          keyExtractor={(item) => item.id}
+          renderItem={renderDoctor}
+          contentContainerStyle={styles.listContainer}
+          showsVerticalScrollIndicator={false}
+          ListHeaderComponent={
+            searchQuery.length > 0 ? (
+              <Text style={styles.resultsCountText}>
+                Found {filteredDoctors.length} {filteredDoctors.length === 1 ? 'doctor' : 'doctors'}
+              </Text>
+            ) : null
+          }
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>No doctors found for "{searchQuery}"</Text>
+            </View>
+          }
+        />
+      </View>
     </SafeAreaView>
   );
 }
@@ -51,85 +112,110 @@ export default function DoctorScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    backgroundColor: '#009688', // Teal color for header area
+  },
+  container: {
+    flex: 1,
     backgroundColor: '#FAFAFA',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
-    backgroundColor: '#ffffff',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    backgroundColor: '#009688',
   },
-  logoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  logoIcon: {
-    marginRight: 8,
+  backButton: {
+    padding: 4,
   },
   headerTitle: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
-    letterSpacing: 1,
-    lineHeight: 28,
+    color: '#fff',
+  },
+  searchContainer: {
+    paddingHorizontal: 16,
+    paddingTop: 20,
+    paddingBottom: 10,
+    backgroundColor: '#fff',
+  },
+  searchInput: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: 14,
+    color: '#333',
   },
   listContainer: {
     padding: 16,
     paddingBottom: 40,
   },
-  columnWrapper: {
-    justifyContent: 'space-between',
+  doctorCard: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+  },
+  doctorInfoContainer: {
+    flexDirection: 'row',
     marginBottom: 16,
   },
-  doctorCard: {
-    width: '48%',
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 12,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
-    elevation: 3,
-    position: 'relative',
-  },
-  doctorImageLarge: {
+  doctorImage: {
     width: 80,
     height: 80,
-    borderRadius: 40,
-    marginBottom: 12,
-  },
-  ratingBadge: {
-    position: 'absolute',
-    top: 12,
-    right: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFF9E6',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
     borderRadius: 8,
+    marginRight: 16,
+    backgroundColor: '#eee',
   },
-  ratingText: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    color: '#F5B041',
-    marginLeft: 2,
+  doctorDetails: {
+    flex: 1,
+    justifyContent: 'center',
   },
-  doctorCardName: {
-    fontSize: 14,
+  doctorName: {
+    fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#000',
     marginBottom: 4,
-    textAlign: 'center',
   },
-  doctorCardSpecialty: {
+  doctorSubText: {
     fontSize: 12,
+    color: '#888',
+    marginBottom: 2,
+  },
+  actionButtonsContainer: {
+    flexDirection: 'row',
+  },
+  appointmentButton: {
+    flex: 1,
+    backgroundColor: '#009688',
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  appointmentText: {
+    color: '#fff',
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  resultsCountText: {
+    fontSize: 14,
     color: '#666',
-    textAlign: 'center',
+    marginBottom: 12,
+    fontWeight: '500',
+  },
+  emptyContainer: {
+    paddingVertical: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#888',
   },
 });

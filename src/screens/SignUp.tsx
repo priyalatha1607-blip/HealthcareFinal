@@ -86,7 +86,7 @@ export default function SignUp({ navigation }: Props) {
         </View>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Already have an account? </Text>
+          <Text style={styles.footerText}>{"Already have an account? "}</Text>
           <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
             <Text style={styles.footerLink}>Sign In</Text>
           </TouchableOpacity>

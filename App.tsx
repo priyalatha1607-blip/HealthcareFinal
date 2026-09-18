@@ -4,21 +4,25 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import AppNavigator from './src/components/navigation/AppNavigator';
 import { useEffect } from "react";
 import { registerForPushNotificationsAsync } from "./src/services/notificationService";
+import { AppointmentProvider } from "./src/context/AppointmentContext";
+import { NotificationProvider } from "./src/context/NotificationContext";
 
 
 export default function App() {
-   useEffect(() => {
-    setTimeout(() => {
-    registerForPushNotificationsAsync();
-  }, 5000)
-},[]);
+  useEffect(() => {
+    // Push notifications removed to prevent device-specific errors
+  },[]);
 
   
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <AppNavigator />
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <NotificationProvider>
+      <AppointmentProvider>
+        <SafeAreaProvider>
+          <NavigationContainer>
+            <AppNavigator />
+          </NavigationContainer>
+        </SafeAreaProvider>
+      </AppointmentProvider>
+    </NotificationProvider>
   );
 }

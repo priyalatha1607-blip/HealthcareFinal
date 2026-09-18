@@ -1,0 +1,159 @@
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../components/navigation/types';
+import { useNotifications } from '../context/NotificationContext';
+
+type Props = {
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Notifications'>;
+};
+
+export default function NotificationsScreen({ navigation }: Props) {
+  const { notifications, markAllAsRead } = useNotifications();
+
+  useEffect(() => {
+    // Mark notifications as read when the screen is focused
+    const unsubscribe = navigation.addListener('focus', () => {
+      markAllAsRead();
+    });
+    return unsubscribe;
+  }, [navigation, markAllAsRead]);
+
+  const renderIcon = (type: string) => {
+    switch (type) {
+      case 'booking':
+        return <MaterialCommunityIcons name="calendar-check" size={24} color="#2E7D32" />;
+      case 'cancellation':
+        return <MaterialCommunityIcons name="calendar-remove" size={24} color="#E53935" />;
+      case 'info':
+      default:
+        return <MaterialCommunityIcons name="information" size={24} color="#1976D2" />;
+    }
+  };
+
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <MaterialCommunityIcons name="arrow-left" size={24} color="#333" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Notifications</Text>
+        <View style={{ width: 24 }} />
+      </View>
+
+      {notifications.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <MaterialCommunityIcons name="bell-sleep-outline" size={64} color="#ccc" />
+          <Text style={styles.emptyText}>No notifications yet.</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={notifications}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContainer}
+          renderItem={({ item }) => (
+            <View style={[styles.notificationCard, !item.isRead && styles.unreadCard]}>
+              <View style={styles.iconContainer}>
+                {renderIcon(item.type)}
+              </View>
+              <View style={styles.textContainer}>
+                <Text style={styles.title}>{item.title}</Text>
+                <Text style={styles.message}>{item.message}</Text>
+                <Text style={styles.timestamp}>
+                  {new Date(item.timestamp).toLocaleString()}
+                </Text>
+              </View>
+              {!item.isRead && <View style={styles.unreadDot} />}
+            </View>
+          )}
+        />
+      )}
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    backgroundColor: '#ffffff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  backButton: {
+    padding: 8,
+    marginLeft: -8,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    marginTop: 16,
+    fontSize: 16,
+    color: '#888',
+  },
+  listContainer: {
+    padding: 16,
+  },
+  notificationCard: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  unreadCard: {
+    backgroundColor: '#f0f8ff',
+  },
+  iconContainer: {
+    marginRight: 16,
+    justifyContent: 'center',
+  },
+  textContainer: {
+    flex: 1,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 4,
+  },
+  message: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 8,
+  },
+  timestamp: {
+    fontSize: 12,
+    color: '#999',
+  },
+  unreadDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#E53935',
+    alignSelf: 'center',
+    marginLeft: 8,
+  },
+});

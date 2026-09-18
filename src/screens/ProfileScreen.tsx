@@ -1,9 +1,14 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../components/navigation/types';
+import { useNavigation } from '@react-navigation/native';
 
 export default function ProfileScreen() {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  
   const userDetails = {
     name: 'priya',
     email: 'priya@gmail.com',
@@ -11,11 +16,26 @@ export default function ProfileScreen() {
     age: '29',
   };
 
+  const handleLogout = () => {
+    Alert.alert(
+      "Log Out",
+      "Are you sure you want to log out?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { 
+          text: "Log Out", 
+          style: "destructive",
+          onPress: () => navigation.replace('SignIn')
+        }
+      ]
+    );
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>My Profile</Text>
-        <TouchableOpacity style={styles.editHeaderButton}>
+        <TouchableOpacity style={styles.editHeaderButton} onPress={() => navigation.navigate('EditProfile')}>
           <MaterialCommunityIcons name="square-edit-outline" size={24} color="#00796B" />
         </TouchableOpacity>
       </View>
@@ -24,14 +44,14 @@ export default function ProfileScreen() {
         <View style={styles.profileHeader}>
           <View style={styles.avatarContainer}>
             <MaterialCommunityIcons name="account" size={60} color="#00796B" />
-            <TouchableOpacity style={styles.editAvatarButton}>
+            <TouchableOpacity style={styles.editAvatarButton} onPress={() => navigation.navigate('EditProfile')}>
               <MaterialCommunityIcons name="camera" size={16} color="#fff" />
             </TouchableOpacity>
           </View>
           <Text style={styles.userName}>{userDetails.name}</Text>
           <Text style={styles.userEmailHeader}>{userDetails.email}</Text>
           
-          <TouchableOpacity style={styles.editProfileButton}>
+          <TouchableOpacity style={styles.editProfileButton} onPress={() => navigation.navigate('EditProfile')}>
             <Text style={styles.editProfileButtonText}>Edit Profile</Text>
           </TouchableOpacity>
         </View>
@@ -73,7 +93,7 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.actionSection}>
-          <TouchableOpacity style={styles.actionMenu}>
+          <TouchableOpacity style={styles.actionMenu} onPress={() => navigation.navigate('Settings')}>
             <View style={styles.actionMenuLeft}>
               <MaterialCommunityIcons name="cog-outline" size={24} color="#555" />
               <Text style={styles.actionMenuText}>Settings</Text>
@@ -81,7 +101,7 @@ export default function ProfileScreen() {
             <MaterialCommunityIcons name="chevron-right" size={24} color="#ccc" />
           </TouchableOpacity>
           
-          <TouchableOpacity style={styles.actionMenu}>
+          <TouchableOpacity style={styles.actionMenu} onPress={() => navigation.navigate('HelpSupport')}>
             <View style={styles.actionMenuLeft}>
               <MaterialCommunityIcons name="help-circle-outline" size={24} color="#555" />
               <Text style={styles.actionMenuText}>Help & Support</Text>
@@ -89,7 +109,7 @@ export default function ProfileScreen() {
             <MaterialCommunityIcons name="chevron-right" size={24} color="#ccc" />
           </TouchableOpacity>
           
-          <TouchableOpacity style={[styles.actionMenu, { borderBottomWidth: 0 }]}>
+          <TouchableOpacity style={[styles.actionMenu, { borderBottomWidth: 0 }]} onPress={handleLogout}>
             <View style={styles.actionMenuLeft}>
               <MaterialCommunityIcons name="logout" size={24} color="#E53935" />
               <Text style={[styles.actionMenuText, { color: '#E53935' }]}>Log Out</Text>

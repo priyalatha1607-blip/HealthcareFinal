@@ -7,6 +7,12 @@ import SignIn from '../../screens/SignIn';
 import SignUp from '../../screens/SignUp';
 import MainTabNavigator from './MainTabNavigator';
 import ForgotPassword from '../../screens/ForgotPassword';
+import BookAppointmentScreen from '../../screens/BookAppointmentScreen';
+import AboutUsScreen from '../../screens/AboutUsScreen';
+import NotificationsScreen from '../../screens/NotificationsScreen';
+import SettingsScreen from '../../screens/SettingsScreen';
+import HelpSupportScreen from '../../screens/HelpSupportScreen';
+import EditProfileScreen from '../../screens/EditProfileScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -19,6 +25,23 @@ export default function AppNavigator() {
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="HomeScreen" component={MainTabNavigator} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+      <Stack.Screen name="BookAppointment" component={BookAppointmentScreen} />
+      <Stack.Screen 
+        name="AboutUs" 
+        component={AboutUsScreen} 
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen 
+        name="Notifications" 
+        component={NotificationsScreen} 
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="HelpSupport" component={HelpSupportScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="MedicalRecords" component={require('../../screens/MedicalRecordsScreen').default} options={{ headerShown: false }} />
+      <Stack.Screen name="Nearby" component={require('../../screens/NearbyScreen').default} options={{ headerShown: false }} />
+      <Stack.Screen name="ConsultDoctor" component={require('../../screens/ConsultDoctorScreen').default} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }
