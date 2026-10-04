@@ -2,41 +2,43 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../components/navigation/types';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import CustomButton from '../components/CustomButton';
+import { COLORS } from '../constants/colors';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Onboarding2'>;
 };
 
+const ONBOARDING_SPECIALIST_IMAGE_URL = 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=800&q=80';
+
 export default function Onboarding2({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.logoText}>✚</Text>
+        <MaterialCommunityIcons name="hand-heart" size={32} color={COLORS.primary} style={{ marginRight: 8 }} />
         <Text style={styles.title}>Healthcare</Text>
       </View>
       
       <View style={styles.content}>
         <Image 
-          source={{ uri: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=300&h=300' }} 
+          source={{ uri: ONBOARDING_SPECIALIST_IMAGE_URL }} 
           style={styles.doctorImage} 
         />
         <Text style={styles.subtitle}>Find your specialist and book an appointment with ease</Text>
       </View>
 
       <View style={styles.footer}>
-        <TouchableOpacity 
-          style={[styles.button, styles.primaryButton]}
-          onPress={() => navigation.navigate('SignIn')}
-        >
-          <Text style={styles.primaryButtonText}>Sign In</Text>
-        </TouchableOpacity>
+        <CustomButton 
+          title="Sign In" 
+          onPress={() => navigation.navigate('SignIn')} 
+        />
         
-        <TouchableOpacity 
-          style={[styles.button, styles.secondaryButton]}
-          onPress={() => navigation.navigate('SignUp')}
-        >
-          <Text style={styles.secondaryButtonText}>Sign Up</Text>
-        </TouchableOpacity>
+        <CustomButton 
+          title="Sign Up" 
+          variant="outline"
+          onPress={() => navigation.navigate('SignUp')} 
+        />
       </View>
     </View>
   );
@@ -45,7 +47,7 @@ export default function Onboarding2({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: COLORS.white,
     padding: 24,
   },
   header: {
@@ -54,15 +56,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 40,
   },
-  logoText: {
-    fontSize: 28,
-    color: '#00796B',
-    marginRight: 8,
-  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333333',
+    color: COLORS.text,
   },
   content: {
     flex: 1,
@@ -77,7 +74,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    color: '#666666',
+    color: COLORS.textLight,
     textAlign: 'center',
     paddingHorizontal: 20,
     lineHeight: 24,
@@ -85,28 +82,5 @@ const styles = StyleSheet.create({
   footer: {
     marginBottom: 32,
     gap: 16,
-  },
-  button: {
-    paddingVertical: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  primaryButton: {
-    backgroundColor: '#00796B',
-  },
-  primaryButtonText: {
-    color: '#ffffff',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  secondaryButton: {
-    backgroundColor: '#ffffff',
-    borderWidth: 2,
-    borderColor: '#00796B',
-  },
-  secondaryButtonText: {
-    color: '#00796B',
-    fontSize: 18,
-    fontWeight: '600',
   },
 });

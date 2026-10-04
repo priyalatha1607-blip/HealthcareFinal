@@ -19,6 +19,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../components/navigation/types';
 import { useAppointments } from '../context/AppointmentContext';
 import { useNotifications } from '../context/NotificationContext';
+import { COLORS } from '../constants/colors';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const doctorsList = [
   { id: '1', name: 'Dr. Jane Smith', specialty: 'Cardiologist', image: 'https://i.pravatar.cc/150?img=47' },
@@ -99,7 +101,7 @@ export default function BookAppointmentScreen({ navigation }: Props) {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color="#fff" />
+          <MaterialCommunityIcons name="arrow-left" size={24} color={COLORS.white} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Appointment</Text>
         <View style={{ width: 24 }} />
@@ -115,10 +117,10 @@ export default function BookAppointmentScreen({ navigation }: Props) {
             style={[styles.inputContainer, errors.doctor && styles.inputError]}
             onPress={() => setShowDoctorModal(true)}
           >
-            <Text style={[styles.input, { color: form.doctor ? '#333' : '#a0a0a0' }]}>
+            <Text style={[styles.input, { color: form.doctor ? COLORS.text : COLORS.gray }]}>
               {form.doctor || 'Select a Doctor'}
             </Text>
-            <MaterialCommunityIcons name="chevron-down" size={20} color="#008080" style={styles.inputIcon} />
+            <MaterialCommunityIcons name="chevron-down" size={20} color={COLORS.primary} style={styles.inputIcon} />
           </TouchableOpacity>
           {errors.doctor ? <Text style={styles.errorText}>{errors.doctor}</Text> : null}
 
@@ -170,18 +172,12 @@ export default function BookAppointmentScreen({ navigation }: Props) {
           </View>
           <TouchableOpacity 
             style={[styles.inputContainer, errors.date && styles.inputError]}
-            onPress={() => {
-              if (!form.doctor) {
-                Alert.alert('Please select a doctor first.');
-                return;
-              }
-              setShowDateModal(true);
-            }}
+            onPress={() => setShowDateModal(true)}
           >
-            <Text style={[styles.input, { color: form.date ? '#333' : '#a0a0a0' }]}>
+            <Text style={[styles.input, { color: form.date ? COLORS.text : COLORS.gray }]}>
               {form.date || 'Select a Date'}
             </Text>
-            <MaterialCommunityIcons name="calendar-month" size={20} color="#008080" style={styles.inputIcon} />
+            <MaterialCommunityIcons name="calendar-month" size={20} color={COLORS.primary} style={styles.inputIcon} />
           </TouchableOpacity>
           {errors.date ? <Text style={styles.errorText}>{errors.date}</Text> : null}
           
@@ -226,7 +222,7 @@ export default function BookAppointmentScreen({ navigation }: Props) {
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Select a Doctor</Text>
               <TouchableOpacity onPress={() => setShowDoctorModal(false)}>
-                <MaterialCommunityIcons name="close" size={24} color="#333" />
+                <MaterialCommunityIcons name="close" size={24} color={COLORS.text} />
               </TouchableOpacity>
             </View>
             <FlatList
@@ -267,58 +263,24 @@ export default function BookAppointmentScreen({ navigation }: Props) {
           </View>
         </View>
       </Modal>
-      {/* Date Selection Modal */}
-      <Modal visible={showDateModal} transparent animationType="slide">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Available Dates for {form.doctor}</Text>
-              <TouchableOpacity onPress={() => setShowDateModal(false)}>
-                <MaterialCommunityIcons name="close" size={24} color="#333" />
-              </TouchableOpacity>
-            </View>
-            
-            {availableDoctorDates.length === 0 ? (
-              <Text style={{ textAlign: 'center', marginVertical: 20, color: '#666' }}>No dates available.</Text>
-            ) : (
-              <FlatList
-                data={availableDoctorDates}
-                keyExtractor={(item) => item}
-                renderItem={({ item }) => (
-                  <TouchableOpacity 
-                    style={styles.modalItem}
-                    onPress={() => {
-                      setForm({ ...form, date: item });
-                      setShowDateModal(false);
-                    }}
-                  >
-                    <MaterialCommunityIcons name="calendar-check" size={24} color="#008080" style={{ marginRight: 12 }} />
-                    <Text style={styles.modalItemName}>
-                      {new Date(item).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
-                    </Text>
-                  </TouchableOpacity>
-                )}
-              />
-            )}
-          </View>
-        </View>
-      </Modal>
-    </SafeAreaView>
+      </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#008080',
+    backgroundColor: COLORS.primaryLight,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
     paddingVertical: 16,
-    backgroundColor: '#008080',
+    backgroundColor: COLORS.primary,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.primaryDark,
   },
   backButton: {
     padding: 4,
@@ -326,11 +288,11 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#fff',
+    color: COLORS.white,
   },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
   },
   scrollContent: {
     padding: 20,
@@ -340,17 +302,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: COLORS.borderMedium,
     borderRadius: 8,
     marginBottom: 12,
     paddingHorizontal: 12,
     height: 50,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
   },
   input: {
     flex: 1,
     fontSize: 14,
-    color: '#333',
+    color: COLORS.text,
   },
   inputError: {
     borderColor: 'red',
@@ -370,27 +332,27 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   labelText: {
-    color: '#008080',
+    color: COLORS.primary,
     fontSize: 14,
     fontWeight: '500',
   },
   textAreaContainer: {
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: COLORS.borderMedium,
     borderRadius: 8,
     marginBottom: 20,
     paddingHorizontal: 12,
     paddingVertical: 12,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     minHeight: 100,
   },
   textArea: {
     flex: 1,
     fontSize: 14,
-    color: '#333',
+    color: COLORS.text,
   },
   submitButton: {
-    backgroundColor: '#008080',
+    backgroundColor: COLORS.primary,
     paddingVertical: 14,
     paddingHorizontal: 32,
     borderRadius: 4,
@@ -398,7 +360,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   submitButtonText: {
-    color: '#fff',
+    color: COLORS.white,
     fontSize: 14,
     fontWeight: 'bold',
   },
@@ -408,7 +370,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   modalContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
@@ -423,7 +385,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: COLORS.text,
   },
   modalItem: {
     flexDirection: 'row',
@@ -441,10 +403,10 @@ const styles = StyleSheet.create({
   modalItemName: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: COLORS.text,
   },
   modalItemSpecialty: {
     fontSize: 14,
-    color: '#666',
+    color: COLORS.textLight,
   },
 });

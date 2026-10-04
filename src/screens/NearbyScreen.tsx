@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../components/navigation/types';
+import { COLORS } from '../constants/colors';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Nearby'>;
@@ -43,7 +44,7 @@ export default function NearbyScreen({ navigation }: Props) {
     const isHospital = item.type === 'Hospital';
     const iconName = isHospital ? 'hospital-box' : 'pill';
     const iconColor = isHospital ? '#E53935' : '#00897B';
-    const bgColor = isHospital ? '#FFEBEE' : '#E0F2F1';
+    const bgColor = isHospital ? '#FFEBEE' : COLORS.primaryLight;
 
     return (
       <View style={styles.card}>
@@ -73,12 +74,25 @@ export default function NearbyScreen({ navigation }: Props) {
         </View>
 
         <View style={styles.actionRow}>
-          <TouchableOpacity style={styles.actionButton}>
-            <MaterialCommunityIcons name="phone-outline" size={20} color="#00796B" />
+          <TouchableOpacity 
+            style={styles.actionButton}
+            onPress={() => Linking.openURL(`tel:18001234567`)}
+          >
+            <MaterialCommunityIcons name="phone-outline" size={20} color={COLORS.primary} />
             <Text style={styles.actionButtonText}>Call Now</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.actionButton, styles.primaryActionButton]}>
-            <MaterialCommunityIcons name="directions" size={20} color="#fff" />
+          <TouchableOpacity 
+            style={[styles.actionButton, styles.primaryActionButton]}
+            onPress={() => {
+              const url = Platform.select({
+                ios: `maps:0,0?q=${item.name}`,
+                android: `geo:0,0?q=${item.name}`,
+                default: `https://www.google.com/maps/search/?api=1&query=${item.name}`
+              });
+              Linking.openURL(url as string);
+            }}
+          >
+            <MaterialCommunityIcons name="directions" size={20} color={COLORS.white} />
             <Text style={styles.primaryActionButtonText}>Get Directions</Text>
           </TouchableOpacity>
         </View>
@@ -90,7 +104,7 @@ export default function NearbyScreen({ navigation }: Props) {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color="#333" />
+          <MaterialCommunityIcons name="arrow-left" size={24} color={COLORS.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Nearby Care</Text>
         <View style={{ width: 24 }} />
@@ -116,7 +130,7 @@ export default function NearbyScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: COLORS.backgroundLight,
   },
   header: {
     flexDirection: 'row',
@@ -124,9 +138,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 16,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: COLORS.borderLight,
   },
   backButton: {
     padding: 8,
@@ -135,44 +149,44 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: COLORS.text,
   },
   filterContainer: {
     flexDirection: 'row',
     paddingHorizontal: 20,
     paddingVertical: 16,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: COLORS.borderLight,
   },
   filterButton: {
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 20,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: COLORS.inputBackground,
     marginRight: 10,
   },
   filterButtonActive: {
-    backgroundColor: '#00796B',
+    backgroundColor: COLORS.primary,
   },
   filterText: {
     fontSize: 14,
-    color: '#666',
+    color: COLORS.textLight,
     fontWeight: '500',
   },
   filterTextActive: {
-    color: '#fff',
+    color: COLORS.white,
   },
   listContainer: {
     padding: 16,
     paddingBottom: 40,
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     borderRadius: 16,
     padding: 16,
     marginBottom: 16,
-    shadowColor: '#000',
+    shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 6,
@@ -197,7 +211,7 @@ const styles = StyleSheet.create({
   nameText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: COLORS.text,
     marginBottom: 4,
   },
   subInfoRow: {
@@ -206,7 +220,7 @@ const styles = StyleSheet.create({
   },
   typeText: {
     fontSize: 12,
-    color: '#555',
+    color: COLORS.textSecondary,
   },
   dot: {
     width: 4,
@@ -234,7 +248,7 @@ const styles = StyleSheet.create({
   },
   ratingText: {
     fontSize: 12,
-    color: '#555',
+    color: COLORS.textSecondary,
     marginLeft: 4,
     fontWeight: '600',
   },
@@ -252,24 +266,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 10,
     borderRadius: 8,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: COLORS.inputBackground,
     marginRight: 8,
   },
   primaryActionButton: {
-    backgroundColor: '#00796B',
+    backgroundColor: COLORS.primary,
     marginRight: 0,
     marginLeft: 8,
   },
   actionButtonText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#00796B',
+    color: COLORS.primary,
     marginLeft: 6,
   },
   primaryActionButtonText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#fff',
+    color: COLORS.white,
     marginLeft: 6,
   },
 });

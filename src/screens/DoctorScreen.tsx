@@ -5,6 +5,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../components/navigation/types';
 import { useNavigation } from '@react-navigation/native';
+import { COLORS } from '../constants/colors';
 
 const allDoctors = [
   { id: '1', name: 'Dr. Abu Saifuddin', position: 'Assistant Professor', specialty: 'Neuromedicine', degree: 'MD , M.PHIL, PHD', image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=150&h=150&fit=crop', searchTerms: ['brain', 'neuromedicine', 'neurologist'] },
@@ -30,6 +31,7 @@ export default function DoctorScreen({ route }: any) {
   }, [route?.params?.category]);
 
   const filteredDoctors = allDoctors.filter(doc => {
+    if (!doc.name || !doc.image || !doc.specialty || !doc.position || !doc.degree) return false;
     const query = searchQuery.toLowerCase();
     if (!query) return true;
     return (
@@ -66,10 +68,10 @@ export default function DoctorScreen({ route }: any) {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color="#fff" />
+          <MaterialCommunityIcons name="arrow-left" size={24} color={COLORS.white} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Doctor List</Text>
-        <View style={{ width: 24 }} /> {/* Placeholder for spacing */}
+        <View style={{ width: 24 }} />
       </View>
 
       <View style={styles.container}>
@@ -77,7 +79,7 @@ export default function DoctorScreen({ route }: any) {
         <View style={styles.searchContainer}>
           <TextInput
             style={styles.searchInput}
-            placeholder="Doctors, Clinics ,labs"
+            placeholder="Doctors, Clinics, Labs"
             placeholderTextColor="#999"
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -116,7 +118,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: COLORS.backgroundLight,
   },
   header: {
     flexDirection: 'row',
@@ -132,35 +134,35 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
+    color: COLORS.white,
   },
   searchContainer: {
     paddingHorizontal: 16,
     paddingTop: 20,
     paddingBottom: 10,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
   },
   searchInput: {
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: COLORS.borderMedium,
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 12,
     fontSize: 14,
-    color: '#333',
+    color: COLORS.text,
   },
   listContainer: {
     padding: 16,
     paddingBottom: 40,
   },
   doctorCard: {
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: COLORS.borderMedium,
   },
   doctorInfoContainer: {
     flexDirection: 'row',
@@ -171,7 +173,7 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 8,
     marginRight: 16,
-    backgroundColor: '#eee',
+    backgroundColor: COLORS.borderLight,
   },
   doctorDetails: {
     flex: 1,
@@ -180,7 +182,7 @@ const styles = StyleSheet.create({
   doctorName: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#000',
+    color: COLORS.black,
     marginBottom: 4,
   },
   doctorSubText: {
@@ -199,13 +201,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   appointmentText: {
-    color: '#fff',
+    color: COLORS.white,
     fontSize: 13,
     fontWeight: '500',
   },
   resultsCountText: {
     fontSize: 14,
-    color: '#666',
+    color: COLORS.textLight,
     marginBottom: 12,
     fontWeight: '500',
   },

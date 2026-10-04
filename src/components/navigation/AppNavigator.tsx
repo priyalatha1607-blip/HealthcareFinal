@@ -7,6 +7,8 @@ import SignIn from '../../screens/SignIn';
 import SignUp from '../../screens/SignUp';
 import MainTabNavigator from './MainTabNavigator';
 import ForgotPassword from '../../screens/ForgotPassword';
+import OTPScreen from '../../screens/OTPScreen';
+import ResetPasswordScreen from '../../screens/ResetPasswordScreen';
 import BookAppointmentScreen from '../../screens/BookAppointmentScreen';
 
 import NotificationsScreen from '../../screens/NotificationsScreen';
@@ -25,6 +27,8 @@ export default function AppNavigator() {
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="HomeScreen" component={MainTabNavigator} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+      <Stack.Screen name="OTPScreen" component={OTPScreen} />
+      <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} />
       <Stack.Screen name="BookAppointment" component={BookAppointmentScreen} />
       
       <Stack.Screen 

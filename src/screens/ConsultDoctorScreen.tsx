@@ -5,6 +5,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../components/navigation/types';
+import { COLORS } from '../constants/colors';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'ConsultDoctor'>;
@@ -14,12 +15,12 @@ type Props = {
 const languages = ['English', 'Tamil', 'Hindi', 'Malayalam', 'Telugu'];
 
 const healthIssuesList = [
-  { id: '1', name: 'General Physician', icon: 'stethoscope', color: '#E3F2FD', iconColor: '#1976D2' },
-  { id: '2', name: 'Orthopedist', icon: 'bone', color: '#FFF3E0', iconColor: '#F57C00' },
-  { id: '3', name: 'Dermatologist', icon: 'face-man-shimmer', color: '#FCE4EC', iconColor: '#C2185B' },
-  { id: '4', name: 'ENT Specialist', icon: 'ear-hearing', color: '#E8F5E9', iconColor: '#388E3C' },
-  { id: '5', name: 'Pediatrician', icon: 'baby-bottle-outline', color: '#F3E5F5', iconColor: '#9C27B0' },
-  { id: '6', name: 'Cardiologist', icon: 'heart-pulse', color: '#FFEBEE', iconColor: '#F44336' },
+  { id: '1', name: 'General Physician', icon: 'stethoscope', color: COLORS.primaryLight, iconColor: COLORS.primary },
+  { id: '2', name: 'Orthopedist', icon: 'bone', color: COLORS.primaryLight, iconColor: COLORS.primary },
+  { id: '3', name: 'Dermatologist', icon: 'face-man-shimmer', color: COLORS.primaryLight, iconColor: COLORS.primary },
+  { id: '4', name: 'ENT Specialist', icon: 'ear-hearing', color: COLORS.primaryLight, iconColor: COLORS.primary },
+  { id: '5', name: 'Pediatrician', icon: 'baby-bottle-outline', color: COLORS.primaryLight, iconColor: COLORS.primary },
+  { id: '6', name: 'Cardiologist', icon: 'heart-pulse', color: COLORS.primaryLight, iconColor: COLORS.primary },
 ];
 
 const getDoctorForIssue = (issueName: string) => {
@@ -52,7 +53,7 @@ export default function ConsultDoctorScreen({ navigation, route }: Props) {
             navigation.goBack();
           }
         }}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color="#333" />
+          <MaterialCommunityIcons name="arrow-left" size={24} color={COLORS.white} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{isGenericConsult && !selectedSpecificIssue ? `${issue}` : `${selectedSpecificIssue || issue} Consultation`}</Text>
         <View style={{ width: 24 }} />
@@ -90,7 +91,7 @@ export default function ConsultDoctorScreen({ navigation, route }: Props) {
                   <Text style={styles.doctorName}>{doctor?.name || 'Dr. Abu Saifuddin'}</Text>
                   <Text style={styles.doctorSpecialty}>{selectedSpecificIssue}</Text>
                   <View style={styles.ratingRow}>
-                    <MaterialCommunityIcons name="star" size={16} color="#F5B041" />
+                    <MaterialCommunityIcons name="star" size={16} color={COLORS.warning} />
                     <Text style={styles.ratingText}>4.9 (120+ reviews)</Text>
                   </View>
                   <Text style={styles.experienceText}>{doctor?.exp || '15 Years'} Experience</Text>
@@ -124,15 +125,15 @@ export default function ConsultDoctorScreen({ navigation, route }: Props) {
             <View style={styles.detailsSection}>
               <Text style={styles.sectionTitle}>Consultation Details</Text>
               <View style={styles.detailRow}>
-                <MaterialCommunityIcons name="clock-outline" size={20} color="#666" />
+                <MaterialCommunityIcons name="clock-outline" size={20} color={COLORS.textLight} />
                 <Text style={styles.detailText}>Wait time: ~5 mins</Text>
               </View>
               <View style={styles.detailRow}>
-                <MaterialCommunityIcons name={issue === 'Video Consult' ? 'video-outline' : 'phone-outline'} size={20} color="#666" />
+                <MaterialCommunityIcons name={issue === 'Video Consult' ? 'video-outline' : 'phone-outline'} size={20} color={COLORS.textLight} />
                 <Text style={styles.detailText}>Secure & Private {issue === 'Video Consult' ? 'Video' : 'Audio'} Consultation</Text>
               </View>
               <View style={styles.detailRow}>
-                <MaterialCommunityIcons name="file-document-outline" size={20} color="#666" />
+                <MaterialCommunityIcons name="file-document-outline" size={20} color={COLORS.textLight} />
                 <Text style={styles.detailText}>Get valid digital prescription</Text>
               </View>
             </View>
@@ -155,7 +156,7 @@ export default function ConsultDoctorScreen({ navigation, route }: Props) {
             }}
           >
             <Text style={styles.payButtonText}>Pay & Consult</Text>
-            <MaterialCommunityIcons name="arrow-right" size={20} color="#fff" style={{ marginLeft: 8 }} />
+            <MaterialCommunityIcons name="arrow-right" size={20} color={COLORS.white} style={{ marginLeft: 8 }} />
           </TouchableOpacity>
         </View>
       )}
@@ -166,7 +167,7 @@ export default function ConsultDoctorScreen({ navigation, route }: Props) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: COLORS.primaryLight,
   },
   header: {
     flexDirection: 'row',
@@ -174,9 +175,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 16,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.primary,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: COLORS.primaryDark,
   },
   backButton: {
     padding: 8,
@@ -185,7 +186,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: COLORS.white,
   },
   content: {
     flex: 1,
@@ -193,22 +194,24 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: COLORS.text,
     marginBottom: 12,
   },
   doctorSection: {
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     marginBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.borderLight,
   },
   doctorCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F9FAFB',
+    backgroundColor: COLORS.backgroundLight,
     padding: 16,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#eee',
+    borderColor: COLORS.primaryLight,
   },
   doctorImage: {
     width: 80,
@@ -222,12 +225,12 @@ const styles = StyleSheet.create({
   doctorName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: COLORS.text,
     marginBottom: 4,
   },
   doctorSpecialty: {
     fontSize: 14,
-    color: '#00796B',
+    color: COLORS.primary,
     fontWeight: '500',
     marginBottom: 4,
   },
@@ -238,21 +241,21 @@ const styles = StyleSheet.create({
   },
   ratingText: {
     fontSize: 13,
-    color: '#555',
+    color: COLORS.textSecondary,
     marginLeft: 4,
   },
   experienceText: {
     fontSize: 13,
-    color: '#666',
+    color: COLORS.textLight,
   },
   languageSection: {
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     marginBottom: 12,
   },
   sectionSubtitle: {
     fontSize: 14,
-    color: '#666',
+    color: COLORS.textLight,
     marginTop: -8,
     marginBottom: 16,
   },
@@ -265,25 +268,25 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 20,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: COLORS.inputBackground,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: COLORS.borderMedium,
   },
   languageChipActive: {
-    backgroundColor: '#00796B',
-    borderColor: '#00796B',
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primary,
   },
   languageText: {
     fontSize: 14,
-    color: '#555',
+    color: COLORS.textSecondary,
     fontWeight: '500',
   },
   languageTextActive: {
-    color: '#fff',
+    color: COLORS.white,
   },
   detailsSection: {
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
   },
   detailRow: {
     flexDirection: 'row',
@@ -292,7 +295,7 @@ const styles = StyleSheet.create({
   },
   detailText: {
     fontSize: 14,
-    color: '#555',
+    color: COLORS.textSecondary,
     marginLeft: 12,
   },
   footer: {
@@ -301,14 +304,14 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     padding: 20,
     paddingBottom: 30,
     borderTopWidth: 1,
-    borderTopColor: '#eee',
+    borderTopColor: COLORS.borderLight,
     alignItems: 'center',
     justifyContent: 'space-between',
-    shadowColor: '#000',
+    shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: -4 },
     shadowOpacity: 0.05,
     shadowRadius: 10,
@@ -319,16 +322,16 @@ const styles = StyleSheet.create({
   },
   feeLabel: {
     fontSize: 13,
-    color: '#666',
+    color: COLORS.textLight,
   },
   feeAmount: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#333',
+    color: COLORS.text,
   },
   payButton: {
     flexDirection: 'row',
-    backgroundColor: '#00796B',
+    backgroundColor: COLORS.primary,
     paddingHorizontal: 24,
     paddingVertical: 14,
     borderRadius: 12,
@@ -336,13 +339,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   payButtonText: {
-    color: '#fff',
+    color: COLORS.white,
     fontSize: 16,
     fontWeight: 'bold',
   },
   healthIssueSection: {
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
   },
   issueGrid: {
     flexDirection: 'row',
@@ -352,13 +355,13 @@ const styles = StyleSheet.create({
   },
   issueSelectCard: {
     width: '48%',
-    backgroundColor: '#F9FAFB',
+    backgroundColor: COLORS.backgroundCard,
     borderRadius: 16,
     padding: 16,
     marginBottom: 16,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#eee',
+    borderColor: COLORS.borderLight,
   },
   issueIconContainer: {
     width: 64,
@@ -371,7 +374,7 @@ const styles = StyleSheet.create({
   issueSelectName: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#333',
+    color: COLORS.text,
     textAlign: 'center',
   },
 });

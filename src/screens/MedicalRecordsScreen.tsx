@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../components/navigation/types';
+import { COLORS } from '../constants/colors';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'MedicalRecords'>;
@@ -17,8 +18,8 @@ const dummyRecords = [
     date: '10 Sep 2026',
     type: 'Lab Report',
     icon: 'flask-outline',
-    color: '#E57373',
-    bgColor: '#FFEBEE',
+    color: COLORS.primary,
+    bgColor: COLORS.primaryLight,
   },
   {
     id: '2',
@@ -27,8 +28,8 @@ const dummyRecords = [
     date: '05 Sep 2026',
     type: 'Scan',
     icon: 'radiology-box',
-    color: '#4FC3F7',
-    bgColor: '#E1F5FE',
+    color: COLORS.primary,
+    bgColor: COLORS.primaryLight,
   },
   {
     id: '3',
@@ -37,8 +38,8 @@ const dummyRecords = [
     date: '28 Aug 2026',
     type: 'Prescription',
     icon: 'pill',
-    color: '#81C784',
-    bgColor: '#E8F5E9',
+    color: COLORS.primary,
+    bgColor: COLORS.primaryLight,
   },
   {
     id: '4',
@@ -47,8 +48,8 @@ const dummyRecords = [
     date: '15 Aug 2026',
     type: 'Heart Test',
     icon: 'heart-pulse',
-    color: '#FFB74D',
-    bgColor: '#FFF3E0',
+    color: COLORS.primary,
+    bgColor: COLORS.primaryLight,
   },
 ];
 
@@ -68,7 +69,7 @@ export default function MedicalRecordsScreen({ navigation }: Props) {
         </View>
       </View>
       <TouchableOpacity style={styles.actionButton}>
-        <MaterialCommunityIcons name="download-outline" size={24} color="#00796B" />
+        <MaterialCommunityIcons name="download-outline" size={24} color={COLORS.primary} />
       </TouchableOpacity>
     </View>
   );
@@ -77,7 +78,7 @@ export default function MedicalRecordsScreen({ navigation }: Props) {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color="#333" />
+          <MaterialCommunityIcons name="arrow-left" size={24} color={COLORS.white} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Medical Records</Text>
         <View style={{ width: 24 }} />
@@ -103,7 +104,7 @@ export default function MedicalRecordsScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: COLORS.primaryLight,
   },
   header: {
     flexDirection: 'row',
@@ -111,9 +112,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 16,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.primary,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: COLORS.primaryDark,
   },
   backButton: {
     padding: 8,
@@ -122,7 +123,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: COLORS.white,
   },
   listContainer: {
     padding: 20,
@@ -134,7 +135,7 @@ const styles = StyleSheet.create({
   listHeaderTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
+    color: COLORS.text,
   },
   listHeaderSubtitle: {
     fontSize: 14,
@@ -144,11 +145,11 @@ const styles = StyleSheet.create({
   recordCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     borderRadius: 16,
     padding: 16,
     marginBottom: 16,
-    shadowColor: '#000',
+    shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 6,
@@ -169,12 +170,12 @@ const styles = StyleSheet.create({
   recordTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: COLORS.text,
     marginBottom: 4,
   },
   recordDoctor: {
     fontSize: 14,
-    color: '#555',
+    color: COLORS.textSecondary,
     marginBottom: 8,
   },
   metaData: {
@@ -195,14 +196,14 @@ const styles = StyleSheet.create({
   },
   recordType: {
     fontSize: 12,
-    color: '#00796B',
+    color: COLORS.primary,
     fontWeight: '600',
   },
   actionButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: COLORS.inputBackground,
     justifyContent: 'center',
     alignItems: 'center',
   },

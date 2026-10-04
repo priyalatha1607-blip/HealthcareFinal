@@ -5,16 +5,14 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../components/navigation/types';
 import { useNavigation } from '@react-navigation/native';
+import { COLORS } from '../constants/colors';
+import { useAuth } from '../context/AuthContext';
+import { Image } from 'react-native';
 
 export default function ProfileScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   
-  const userDetails = {
-    name: 'priya',
-    email: 'priya@gmail.com',
-    phone: '91-8525084862',
-    age: '29',
-  };
+  const { userProfile: userDetails } = useAuth();
 
   const handleLogout = () => {
     Alert.alert(
@@ -36,16 +34,16 @@ export default function ProfileScreen() {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>My Profile</Text>
         <TouchableOpacity style={styles.editHeaderButton} onPress={() => navigation.navigate('EditProfile')}>
-          <MaterialCommunityIcons name="square-edit-outline" size={24} color="#00796B" />
+          <MaterialCommunityIcons name="square-edit-outline" size={24} color={COLORS.primary} />
         </TouchableOpacity>
       </View>
       
       <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent}>
         <View style={styles.profileHeader}>
           <View style={styles.avatarContainer}>
-            <MaterialCommunityIcons name="account" size={60} color="#00796B" />
+            {userDetails.avatar ? <Image source={{ uri: userDetails.avatar }} style={{ width: 100, height: 100, borderRadius: 50 }} /> : <MaterialCommunityIcons name="account" size={60} color={COLORS.primary} />}
             <TouchableOpacity style={styles.editAvatarButton} onPress={() => navigation.navigate('EditProfile')}>
-              <MaterialCommunityIcons name="camera" size={16} color="#fff" />
+              <MaterialCommunityIcons name="camera" size={16} color={COLORS.white} />
             </TouchableOpacity>
           </View>
           <Text style={styles.userName}>{userDetails.name}</Text>
@@ -60,7 +58,7 @@ export default function ProfileScreen() {
           <Text style={styles.sectionTitle}>Personal Information</Text>
           
           <View style={styles.infoRow}>
-            <MaterialCommunityIcons name="account-outline" size={24} color="#666" style={styles.infoIcon} />
+            <MaterialCommunityIcons name="account-outline" size={24} color={COLORS.textLight} style={styles.infoIcon} />
             <View style={styles.infoContent}>
               <Text style={styles.infoLabel}>Name</Text>
               <Text style={styles.infoValue}>{userDetails.name}</Text>
@@ -68,7 +66,7 @@ export default function ProfileScreen() {
           </View>
 
           <View style={styles.infoRow}>
-            <MaterialCommunityIcons name="email-outline" size={24} color="#666" style={styles.infoIcon} />
+            <MaterialCommunityIcons name="email-outline" size={24} color={COLORS.textLight} style={styles.infoIcon} />
             <View style={styles.infoContent}>
               <Text style={styles.infoLabel}>Email ID</Text>
               <Text style={styles.infoValue}>{userDetails.email}</Text>
@@ -76,7 +74,7 @@ export default function ProfileScreen() {
           </View>
 
           <View style={styles.infoRow}>
-            <MaterialCommunityIcons name="phone-outline" size={24} color="#666" style={styles.infoIcon} />
+            <MaterialCommunityIcons name="phone-outline" size={24} color={COLORS.textLight} style={styles.infoIcon} />
             <View style={styles.infoContent}>
               <Text style={styles.infoLabel}>Phone Number</Text>
               <Text style={styles.infoValue}>{userDetails.phone}</Text>
@@ -84,7 +82,7 @@ export default function ProfileScreen() {
           </View>
 
           <View style={styles.infoRow}>
-            <MaterialCommunityIcons name="calendar-account-outline" size={24} color="#666" style={styles.infoIcon} />
+            <MaterialCommunityIcons name="calendar-account-outline" size={24} color={COLORS.textLight} style={styles.infoIcon} />
             <View style={[styles.infoContent, { borderBottomWidth: 0 }]}>
               <Text style={styles.infoLabel}>Age</Text>
               <Text style={styles.infoValue}>{userDetails.age} Years</Text>
@@ -93,22 +91,6 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.actionSection}>
-          <TouchableOpacity style={styles.actionMenu} onPress={() => navigation.navigate('Settings')}>
-            <View style={styles.actionMenuLeft}>
-              <MaterialCommunityIcons name="cog-outline" size={24} color="#555" />
-              <Text style={styles.actionMenuText}>Settings</Text>
-            </View>
-            <MaterialCommunityIcons name="chevron-right" size={24} color="#ccc" />
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.actionMenu} onPress={() => navigation.navigate('HelpSupport')}>
-            <View style={styles.actionMenuLeft}>
-              <MaterialCommunityIcons name="help-circle-outline" size={24} color="#555" />
-              <Text style={styles.actionMenuText}>Help & Support</Text>
-            </View>
-            <MaterialCommunityIcons name="chevron-right" size={24} color="#ccc" />
-          </TouchableOpacity>
-          
           <TouchableOpacity style={[styles.actionMenu, { borderBottomWidth: 0 }]} onPress={handleLogout}>
             <View style={styles.actionMenuLeft}>
               <MaterialCommunityIcons name="logout" size={24} color="#E53935" />
@@ -124,7 +106,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: COLORS.inputBackground,
   },
   header: {
     flexDirection: 'row',
@@ -132,14 +114,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: COLORS.white,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: COLORS.borderLight,
   },
   headerTitle: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#333',
+    color: COLORS.text,
   },
   editHeaderButton: {
     padding: 4,
@@ -153,11 +135,11 @@ const styles = StyleSheet.create({
   },
   profileHeader: {
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     borderRadius: 16,
     padding: 24,
     marginBottom: 16,
-    shadowColor: '#000',
+    shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 8,
@@ -167,55 +149,55 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: '#e0f2f1',
+    backgroundColor: COLORS.primaryLight,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
     borderWidth: 2,
-    borderColor: '#00796B',
+    borderColor: COLORS.primary,
     position: 'relative',
   },
   editAvatarButton: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    backgroundColor: '#00796B',
+    backgroundColor: COLORS.primary,
     width: 32,
     height: 32,
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#fff',
+    borderColor: COLORS.white,
   },
   userName: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#333',
+    color: COLORS.text,
     marginBottom: 4,
   },
   userEmailHeader: {
     fontSize: 14,
-    color: '#666',
+    color: COLORS.textLight,
     marginBottom: 16,
   },
   editProfileButton: {
-    backgroundColor: '#00796B',
+    backgroundColor: COLORS.primary,
     paddingVertical: 10,
     paddingHorizontal: 24,
     borderRadius: 20,
   },
   editProfileButtonText: {
-    color: '#fff',
+    color: COLORS.white,
     fontWeight: '600',
     fontSize: 14,
   },
   infoSection: {
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     borderRadius: 16,
     padding: 20,
     marginBottom: 16,
-    shadowColor: '#000',
+    shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 8,
@@ -224,7 +206,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: COLORS.text,
     marginBottom: 20,
   },
   infoRow: {
@@ -233,7 +215,7 @@ const styles = StyleSheet.create({
   },
   infoIcon: {
     marginRight: 16,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: COLORS.inputBackground,
     padding: 10,
     borderRadius: 12,
   },
@@ -250,14 +232,14 @@ const styles = StyleSheet.create({
   },
   infoValue: {
     fontSize: 16,
-    color: '#333',
+    color: COLORS.text,
     fontWeight: '500',
   },
   actionSection: {
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     borderRadius: 16,
     paddingHorizontal: 20,
-    shadowColor: '#000',
+    shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 8,
@@ -277,7 +259,7 @@ const styles = StyleSheet.create({
   },
   actionMenuText: {
     fontSize: 16,
-    color: '#333',
+    color: COLORS.text,
     marginLeft: 16,
     fontWeight: '500',
   },

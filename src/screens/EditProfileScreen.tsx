@@ -1,22 +1,46 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../components/navigation/types';
+import { COLORS } from '../constants/colors';
+import { useAuth } from '../context/AuthContext';
+import * as ImagePicker from 'expo-image-picker';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'EditProfile'>;
 };
 
 export default function EditProfileScreen({ navigation }: Props) {
-  const [name, setName] = useState('priya');
-  const [email, setEmail] = useState('priya@gmail.com');
-  const [phone, setPhone] = useState('91-8525084862');
-  const [age, setAge] = useState('29');
+  const { userProfile, setUserProfile } = useAuth();
+  const [name, setName] = useState(userProfile.name);
+  const [email, setEmail] = useState(userProfile.email);
+  const [phone, setPhone] = useState(userProfile.phone);
+  const [age, setAge] = useState(userProfile.age);
+  const [avatar, setAvatar] = useState<string | null>(userProfile.avatar);
+
+  const handlePickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+    });
+
+    if (!result.canceled) {
+      setAvatar(result.assets[0].uri);
+    }
+  };
 
   const handleSave = () => {
-    // Save functionality can be implemented here
+    setUserProfile({
+      name,
+      email,
+      phone,
+      age,
+      avatar,
+    });
     navigation.goBack();
   };
 
@@ -24,16 +48,20 @@ export default function EditProfileScreen({ navigation }: Props) {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color="#333" />
+          <MaterialCommunityIcons name="arrow-left" size={24} color={COLORS.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Edit Profile</Text>
       </View>
 
       <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent}>
         <View style={styles.avatarContainer}>
-          <MaterialCommunityIcons name="account" size={60} color="#00796B" />
-          <TouchableOpacity style={styles.editAvatarButton}>
-            <MaterialCommunityIcons name="camera" size={16} color="#fff" />
+          {avatar ? (
+            <Image source={{ uri: avatar }} style={{ width: 100, height: 100, borderRadius: 50 }} />
+          ) : (
+            <MaterialCommunityIcons name="account" size={60} color={COLORS.primary} />
+          )}
+          <TouchableOpacity style={styles.editAvatarButton} onPress={handlePickImage}>
+            <MaterialCommunityIcons name="camera" size={16} color={COLORS.white} />
           </TouchableOpacity>
         </View>
 
@@ -91,16 +119,16 @@ export default function EditProfileScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: COLORS.backgroundLight,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: COLORS.white,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: COLORS.borderLight,
   },
   backButton: {
     padding: 4,
@@ -109,7 +137,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
+    color: COLORS.text,
   },
   content: {
     flex: 1,
@@ -121,56 +149,56 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: '#e0f2f1',
+    backgroundColor: COLORS.primaryLight,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
     marginBottom: 32,
     borderWidth: 2,
-    borderColor: '#00796B',
+    borderColor: COLORS.primary,
     position: 'relative',
   },
   editAvatarButton: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    backgroundColor: '#00796B',
+    backgroundColor: COLORS.primary,
     width: 32,
     height: 32,
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#fff',
+    borderColor: COLORS.white,
   },
   formGroup: {
     marginBottom: 20,
   },
   label: {
     fontSize: 14,
-    color: '#666',
+    color: COLORS.textLight,
     marginBottom: 8,
     fontWeight: '500',
   },
   input: {
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: COLORS.borderMedium,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
     fontSize: 16,
-    color: '#333',
+    color: COLORS.text,
   },
   saveButton: {
-    backgroundColor: '#00796B',
+    backgroundColor: COLORS.primary,
     borderRadius: 16,
     paddingVertical: 16,
     alignItems: 'center',
     marginTop: 20,
   },
   saveButtonText: {
-    color: '#fff',
+    color: COLORS.white,
     fontSize: 16,
     fontWeight: 'bold',
   },

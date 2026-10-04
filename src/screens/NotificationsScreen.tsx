@@ -5,6 +5,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../components/navigation/types';
 import { useNotifications } from '../context/NotificationContext';
+import { COLORS } from '../constants/colors';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Notifications'>;
@@ -37,7 +38,7 @@ export default function NotificationsScreen({ navigation }: Props) {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color="#333" />
+          <MaterialCommunityIcons name="arrow-left" size={24} color={COLORS.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Notifications</Text>
         <View style={{ width: 24 }} />
@@ -77,7 +78,7 @@ export default function NotificationsScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: COLORS.inputBackground,
   },
   header: {
     flexDirection: 'row',
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: COLORS.white,
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
   },
@@ -96,7 +97,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: COLORS.text,
   },
   emptyContainer: {
     flex: 1,
@@ -113,11 +114,11 @@ const styles = StyleSheet.create({
   },
   notificationCard: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
-    shadowColor: '#000',
+    shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
@@ -136,12 +137,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: COLORS.text,
     marginBottom: 4,
   },
   message: {
     fontSize: 14,
-    color: '#666',
+    color: COLORS.textLight,
     marginBottom: 8,
   },
   timestamp: {

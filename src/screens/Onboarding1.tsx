@@ -1,27 +1,35 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../components/navigation/types';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import CustomButton from '../components/CustomButton';
+import { COLORS } from '../constants/colors';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Onboarding1'>;
 };
+
+const ONBOARDING_WELCOME_IMAGE_URL = 'https://images.unsplash.com/photo-1576091160550-2173ff9e5ee5?w=800&q=80';
 
 export default function Onboarding1({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
         <View style={styles.logoPlaceholder}>
-          <Text style={styles.logoText}>✚</Text>
+          <MaterialCommunityIcons name="hand-heart" size={56} color={COLORS.primary} />
         </View>
         <Text style={styles.title}>Healthcare</Text>
+        <Image 
+          source={{ uri: ONBOARDING_WELCOME_IMAGE_URL }} 
+          style={{ width: 250, height: 250, resizeMode: 'contain', marginTop: 40 }} 
+        />
       </View>
-      <TouchableOpacity 
-        style={styles.button}
-        onPress={() => navigation.navigate('Onboarding2')}
-      >
-        <Text style={styles.buttonText}>Next</Text>
-      </TouchableOpacity>
+      <CustomButton 
+        title="Next" 
+        onPress={() => navigation.navigate('Onboarding2')} 
+        style={{ marginBottom: 32 }}
+      />
     </View>
   );
 }
@@ -29,7 +37,7 @@ export default function Onboarding1({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: COLORS.white,
     justifyContent: 'space-between',
     padding: 24,
   },
@@ -47,25 +55,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 24,
   },
-  logoText: {
-    fontSize: 48,
-    color: '#00796B',
-  },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#333333',
+    color: COLORS.text,
   },
-  button: {
-    backgroundColor: '#00796B',
-    paddingVertical: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginBottom: 32,
-  },
-  buttonText: {
-    color: '#ffffff',
-    fontSize: 18,
-    fontWeight: '600',
-  }
 });

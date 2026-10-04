@@ -5,12 +5,15 @@ import { RootStackParamList } from '../components/navigation/types';
 import { COLORS } from '../constants/colors';
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useAuth } from '../context/AuthContext';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'SignUp'>;
 };
 
 export default function SignUp({ navigation }: Props) {
+  const { setEmail: setGlobalEmail } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -32,7 +35,7 @@ export default function SignUp({ navigation }: Props) {
       setError('Password must contain at least 8 characters, one uppercase, one number and one special character');
       return;
     }
-    
+    setGlobalEmail(email);
     navigation.replace('SignIn');
   };
 
@@ -43,6 +46,9 @@ export default function SignUp({ navigation }: Props) {
     >
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
+          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+            <MaterialCommunityIcons name="arrow-left" size={24} color={COLORS.text} />
+          </TouchableOpacity>
           <Text style={styles.title}>Create Account</Text>
           <Text style={styles.subtitle}>Sign up to get started</Text>
         </View>
@@ -87,10 +93,12 @@ export default function SignUp({ navigation }: Props) {
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>{"Already have an account? "}</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
-            <Text style={styles.footerLink}>Sign In</Text>
-          </TouchableOpacity>
         </View>
+        <CustomButton 
+          title="Sign In" 
+          variant="outline"
+          onPress={() => navigation.navigate('SignIn')} 
+        />
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -105,6 +113,9 @@ const styles = StyleSheet.create({
   header: {
     marginTop: 60,
     marginBottom: 40,
+  },
+  backButton: {
+    marginBottom: 16,
   },
   title: {
     fontSize: 32,
@@ -129,15 +140,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 32,
-    marginBottom: 32,
+    marginBottom: 16,
   },
   footerText: {
     color: COLORS.textLight,
     fontSize: 16,
-  },
-  footerLink: {
-    color: COLORS.primary,
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });

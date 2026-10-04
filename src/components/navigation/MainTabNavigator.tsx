@@ -7,6 +7,7 @@ import HomeScreen from '../../screens/HomeScreen';
 import DoctorScreen from '../../screens/DoctorScreen';
 import AppointmentsScreen from '../../screens/AppointmentsScreen';
 import ProfileScreen from '../../screens/ProfileScreen';
+import { COLORS } from '../../constants/colors';
 
 const Tab = createBottomTabNavigator();
 
@@ -32,7 +33,7 @@ export default function MainTabNavigator() {
 
           return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#00796B',
+        tabBarActiveTintColor: COLORS.primary,
         tabBarInactiveTintColor: 'gray',
         tabBarStyle: {
           paddingBottom: insets.bottom > 0 ? insets.bottom : 10,

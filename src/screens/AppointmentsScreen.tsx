@@ -12,6 +12,7 @@ const dummyAppointments = [
 ];
 import { useAppointments } from '../context/AppointmentContext';
 import { useNotifications } from '../context/NotificationContext';
+import { COLORS } from '../constants/colors';
 
 export default function AppointmentsScreen() {
   const { appointments, cancelAppointment } = useAppointments();
@@ -50,7 +51,7 @@ export default function AppointmentsScreen() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
         <View style={styles.logoContainer}>
-          <MaterialCommunityIcons name="heart-pulse" size={32} color="#00796B" style={styles.logoIcon} />
+          <MaterialCommunityIcons name="hand-heart" size={32} color={COLORS.primary} style={styles.logoIcon} />
           <Text style={styles.headerTitle}>Healthcare</Text>
         </View>
       </View>
@@ -58,7 +59,7 @@ export default function AppointmentsScreen() {
         <Text style={styles.pageTitle}>My Appointments</Text>
         
         {allAppointments.length === 0 ? (
-          <Text style={{ textAlign: 'center', marginTop: 20, color: '#666' }}>No appointments found.</Text>
+          <Text style={{ textAlign: 'center', marginTop: 20, color: COLORS.textLight }}>No appointments found.</Text>
         ) : (
           allAppointments.map((apt) => (
             <View key={apt.id} style={styles.card}>
@@ -73,12 +74,12 @@ export default function AppointmentsScreen() {
               </View>
               <View style={styles.cardBody}>
                 <View style={styles.dateTimeContainer}>
-                  <MaterialCommunityIcons name="calendar" size={16} color="#666" style={styles.icon} />
+                  <MaterialCommunityIcons name="calendar" size={16} color={COLORS.textLight} style={styles.icon} />
                   <Text style={styles.dateTimeText}>{apt.date}</Text>
                 </View>
                 <View style={styles.dateTimeContainer}>
-                  <MaterialCommunityIcons name="clock-outline" size={16} color="#666" style={styles.icon} />
-                  <Text style={styles.dateTimeText}>{apt.time}</Text>
+                  <MaterialCommunityIcons name="clock-outline" size={16} color={COLORS.textLight} style={styles.icon} />
+                  <Text style={styles.dateTimeText}>{apt.time?.replace(/:\d{2}(\s?[AaPp][Mm])/, '$1')}</Text>
                 </View>
               </View>
               
@@ -98,7 +99,7 @@ export default function AppointmentsScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: COLORS.inputBackground,
   },
   header: {
     flexDirection: 'row',
@@ -108,7 +109,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
-    backgroundColor: '#ffffff',
+    backgroundColor: COLORS.white,
   },
   logoContainer: {
     flexDirection: 'row',
@@ -132,15 +133,15 @@ const styles = StyleSheet.create({
   pageTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
+    color: COLORS.text,
     marginBottom: 16,
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
-    shadowColor: '#000',
+    shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -155,11 +156,11 @@ const styles = StyleSheet.create({
   doctorName: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: COLORS.text,
   },
   specialty: {
     fontSize: 14,
-    color: '#666',
+    color: COLORS.textLight,
     marginTop: 2,
   },
   statusBadge: {

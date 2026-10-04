@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform, Alert, Keyboard } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../components/navigation/types';
@@ -8,28 +8,35 @@ import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
 
 type Props = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'ForgotPassword'>;
+  navigation: NativeStackNavigationProp<RootStackParamList, 'ResetPasswordScreen'>;
+  route: { params: { email: string } };
 };
 
-export default function ForgotPassword({ navigation }: Props) {
-  const [email, setEmail] = useState('');
+export default function ResetPasswordScreen({ navigation }: Props) {
+  const [newPassword, setNewPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleReset = () => {
+  const handleUpdatePassword = () => {
     setError('');
-    if (!email.trim()) {
-      setError('Please enter your email');
-      return;
-    }
-    const emailRegex = /\S+@\S+\.\S+/;
-    if (!emailRegex.test(email)) {
-      setError('Please enter a valid email');
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      setError('Password must contain at least 8 characters, one uppercase, one number and one special character');
       return;
     }
     
-    // Navigate to OTP Screen
     Keyboard.dismiss();
-    navigation.navigate('OTPScreen', { email });
+    Alert.alert(
+      'Updated',
+      'Your password has been updated successfully.',
+      [
+        {
+          text: 'OK',
+          onPress: () => {
+            navigation.navigate('SignIn');
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -44,22 +51,24 @@ export default function ForgotPassword({ navigation }: Props) {
         >
           <Ionicons name="arrow-back" size={24} color={COLORS.text} />
         </TouchableOpacity>
-        <Text style={styles.title}>Reset Password</Text>
-        <Text style={styles.subtitle}>Enter your email to receive OTP</Text>
+        <Text style={styles.title}>Set New Password</Text>
+        <Text style={styles.subtitle}>Enter a strong password for your account</Text>
       </View>
 
       <View style={styles.form}>
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
+        
         <CustomInput
-          label="Email"
-          placeholder="Enter your email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
+          label="New Password"
+          placeholder="Enter new password"
+          value={newPassword}
+          onChangeText={setNewPassword}
+          isPassword
         />
 
-        <CustomButton title="Send OTP" onPress={handleReset} />
+        <View style={styles.spacer} />
+        
+        <CustomButton title="Update Password" onPress={handleUpdatePassword} />
       </View>
     </KeyboardAvoidingView>
   );
@@ -71,12 +80,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
     padding: 24,
   },
-  backButton: {
-    marginBottom: 16,
-  },
   header: {
     marginTop: 60,
     marginBottom: 40,
+  },
+  backButton: {
+    marginBottom: 16,
   },
   title: {
     fontSize: 32,
@@ -96,5 +105,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     fontSize: 14,
     textAlign: 'center',
+  },
+  spacer: {
+    height: 24,
   },
 });

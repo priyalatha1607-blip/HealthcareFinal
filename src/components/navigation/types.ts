@@ -14,4 +14,6 @@ export type RootStackParamList = {
   MedicalRecords: undefined;
   Nearby: undefined;
   ConsultDoctor: { issue: string };
+  OTPScreen: { email: string };
+  ResetPasswordScreen: { email: string };
 };

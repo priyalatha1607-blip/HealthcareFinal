@@ -5,12 +5,14 @@ import { RootStackParamList } from '../components/navigation/types';
 import { COLORS } from '../constants/colors';
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
+import { useAuth } from '../context/AuthContext';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'SignIn'>;
 };
 
 export default function SignIn({ navigation }: Props) {
+  const { setEmail: setGlobalEmail } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -31,6 +33,7 @@ export default function SignIn({ navigation }: Props) {
       setError('Password must contain at least 8 characters, one uppercase, one number and one special character');
       return;
     }
+    setGlobalEmail(email);
     navigation.replace('HomeScreen');
   };
 
@@ -77,10 +80,12 @@ export default function SignIn({ navigation }: Props) {
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>{"Don't have an account? "}</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-            <Text style={styles.footerLink}>Sign Up</Text>
-          </TouchableOpacity>
         </View>
+        <CustomButton 
+          title="Sign Up" 
+          variant="outline"
+          onPress={() => navigation.navigate('SignUp')} 
+        />
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -131,16 +136,11 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 32,
     marginTop: 'auto',
+    marginBottom: 16,
   },
   footerText: {
     color: COLORS.textLight,
     fontSize: 16,
-  },
-  footerLink: {
-    color: COLORS.primary,
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });
