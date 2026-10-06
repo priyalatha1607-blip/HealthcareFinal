@@ -1,11 +1,21 @@
 import React, { createContext, useState, useContext } from 'react';
 
-type UserProfile = {
+export type HealthDetails = {
+  bloodGroup: string;
+  height: string;
+  weight: string;
+  allergies: string;
+  medications: string;
+  medicalHistory: string;
+};
+
+export type UserProfile = {
   name: string;
   email: string;
   phone: string;
   age: string;
   avatar: string | null;
+  healthDetails?: HealthDetails;
 };
 
 type AuthContextType = {

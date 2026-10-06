@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   },
   listHeaderSubtitle: {
     fontSize: 14,
-    color: '#777',
+    color: COLORS.textMuted,
     marginTop: 4,
   },
   recordCard: {
@@ -184,14 +184,14 @@ const styles = StyleSheet.create({
   },
   recordDate: {
     fontSize: 12,
-    color: '#888',
+    color: COLORS.textMuted,
     fontWeight: '500',
   },
   dot: {
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#ccc',
+    backgroundColor: COLORS.grayLight,
     marginHorizontal: 8,
   },
   recordType: {

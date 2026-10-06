@@ -24,17 +24,14 @@ export const HomeHeader = ({ userName, unreadCount, onNotificationPress }: any) 
 
 export const SearchBar = ({ searchQuery, setSearchQuery }: any) => (
   <View style={styles.searchContainer}>
-    <MaterialCommunityIcons name="magnify" size={24} color="#888" style={styles.searchIcon} />
+    <MaterialCommunityIcons name="magnify" size={24} color={ COLORS.textMuted } style={styles.searchIcon} />
     <TextInput 
-      placeholder="Search doctor, clinics, symptoms..." 
+      placeholder="Search doctor and clinic" 
       style={styles.searchInput}
-      placeholderTextColor="#888"
+      placeholderTextColor={ COLORS.textMuted }
       value={searchQuery}
       onChangeText={setSearchQuery}
     />
-    <TouchableOpacity style={styles.filterButton}>
-      <MaterialCommunityIcons name="tune" size={20} color={COLORS.white} />
-    </TouchableOpacity>
   </View>
 );
 
@@ -46,7 +43,7 @@ export const SearchResultsView = ({ filteredDoctors, searchQuery, navigation }: 
         <TouchableOpacity 
           key={doc.id} 
           style={styles.searchResultCard}
-          onPress={() => navigation.navigate('Doctor')}
+          onPress={() => navigation.navigate('DoctorProfile', { doctor: doc })}
         >
           <Image source={{ uri: doc.image }} style={styles.searchResultImage} />
           <View style={styles.searchResultInfo}>
@@ -55,14 +52,14 @@ export const SearchResultsView = ({ filteredDoctors, searchQuery, navigation }: 
             {doc.clinic ? <Text style={styles.searchResultClinic}>{doc.clinic}</Text> : null}
           </View>
           <View style={styles.searchResultRating}>
-            <MaterialCommunityIcons name="star" size={14} color="#FFD700" />
+            <MaterialCommunityIcons name="star" size={14} color={ COLORS.star } />
             <Text style={styles.searchResultRatingText}>{doc.rating}</Text>
           </View>
         </TouchableOpacity>
       ))
     ) : (
       <View style={styles.noResultsContainer}>
-        <MaterialCommunityIcons name="text-search" size={48} color="#ccc" />
+        <MaterialCommunityIcons name="text-search" size={48} color={ COLORS.grayLight } />
         <Text style={styles.noResultsText}>No doctors or clinics found.</Text>
       </View>
     )}
@@ -120,17 +117,17 @@ export const Categories = ({ categories, navigation }: any) => (
   </View>
 );
 
-export const TopDoctors = ({ topDoctors }: any) => (
+export const TopDoctors = ({ topDoctors, navigation }: any) => (
   <View style={styles.sectionContainer}>
     <View style={styles.sectionHeader}>
       <Text style={styles.sectionTitle}>Top Doctors</Text>
     </View>
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalScrollPadding}>
       {topDoctors.map((doc: any) => (
-        <TouchableOpacity key={doc.id} style={styles.doctorCard}>
+        <TouchableOpacity key={doc.id} style={styles.doctorCard} onPress={() => navigation.navigate('DoctorProfile', { doctor: doc })}>
           <Image source={{ uri: doc.image }} style={styles.doctorImageLarge} />
           <View style={styles.ratingBadge}>
-            <MaterialCommunityIcons name="star" size={14} color="#FFD700" />
+            <MaterialCommunityIcons name="star" size={14} color={ COLORS.star } />
             <Text style={styles.ratingText}>{doc.rating}</Text>
           </View>
           <Text style={styles.doctorCardName} numberOfLines={1}>{doc.name}</Text>
@@ -161,8 +158,8 @@ export const QuickActions = ({ navigation }: any) => (
       style={styles.quickActionCard} 
       onPress={() => navigation.navigate('MedicalRecords')}
     >
-      <View style={[styles.quickActionIcon, { backgroundColor: '#E8EAF6' }]}>
-        <MaterialCommunityIcons name="clipboard-text-outline" size={28} color="#3F51B5" />
+      <View style={[styles.quickActionIcon, { backgroundColor: COLORS.primaryLight }]}>
+        <MaterialCommunityIcons name="clipboard-text-outline" size={28} color={COLORS.primary} />
       </View>
       <Text style={styles.quickActionText}>Medical</Text>
       <Text style={styles.quickActionText}>Records</Text>
@@ -198,8 +195,8 @@ export const ConsultOnline = ({ navigation }: any) => (
         style={styles.consultCard}
         onPress={() => navigation.navigate('ConsultDoctor', { issue: 'Video Consult' })}
       >
-        <View style={[styles.consultIconContainer, { backgroundColor: '#E3F2FD' }]}>
-          <MaterialCommunityIcons name="video" size={32} color="#1976D2" />
+        <View style={[styles.consultIconContainer, { backgroundColor: COLORS.primaryLight }]}>
+          <MaterialCommunityIcons name="video" size={32} color={COLORS.primary} />
         </View>
         <Text style={styles.consultTitle}>Video Consult</Text>
         <Text style={styles.consultSubtitle}>Talk via video call</Text>
@@ -211,8 +208,8 @@ export const ConsultOnline = ({ navigation }: any) => (
         style={styles.consultCard}
         onPress={() => navigation.navigate('ConsultDoctor', { issue: 'Audio Consult' })}
       >
-        <View style={[styles.consultIconContainer, { backgroundColor: '#F3E5F5' }]}>
-          <MaterialCommunityIcons name="phone" size={32} color="#9C27B0" />
+        <View style={[styles.consultIconContainer, { backgroundColor: COLORS.primaryLight }]}>
+          <MaterialCommunityIcons name="phone" size={32} color={COLORS.primary} />
         </View>
         <Text style={styles.consultTitle}>Audio Consult</Text>
         <Text style={styles.consultSubtitle}>Talk via voice call</Text>
@@ -250,7 +247,7 @@ const styles = StyleSheet.create({
     elevation: 2, position: 'relative',
   },
   notificationBadge: {
-    position: 'absolute', top: -2, right: -2, backgroundColor: '#E53935',
+    position: 'absolute', top: -2, right: -2, backgroundColor: COLORS.errorDark,
     borderRadius: 10, minWidth: 18, height: 18, justifyContent: 'center',
     alignItems: 'center', paddingHorizontal: 4,
   },
@@ -279,22 +276,22 @@ const styles = StyleSheet.create({
   appointmentCardBody: { backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 12, flexDirection: 'row', justifyContent: 'space-between', padding: 12 },
   appointmentTimeContainer: { flexDirection: 'row', alignItems: 'center' },
   appointmentTimeText: { color: COLORS.white, marginLeft: 6, fontSize: 13, fontWeight: '500' },
-  horizontalScrollPadding: { paddingHorizontal: 20, paddingRight: 10 },
+  horizontalScrollPadding: { paddingHorizontal: 20, paddingRight: 10, paddingBottom: 16, paddingTop: 4 },
   categoryCard: { alignItems: 'center', marginRight: 20 },
   categoryIconContainer: { width: 64, height: 64, borderRadius: 20, justifyContent: 'center', alignItems: 'center', marginBottom: 8, shadowColor: COLORS.black, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 2 },
   categoryName: { fontSize: 13, fontWeight: '500', color: COLORS.textSecondary },
   doctorCard: { width: 140, backgroundColor: COLORS.white, borderRadius: 16, padding: 12, marginRight: 16, alignItems: 'center', shadowColor: COLORS.black, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 6, elevation: 3, position: 'relative' },
   doctorImageLarge: { width: 80, height: 80, borderRadius: 40, marginBottom: 12 },
-  ratingBadge: { position: 'absolute', top: 12, right: 12, flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFF9E6', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 8 },
+  ratingBadge: { position: 'absolute', top: 12, right: 12, flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.warningBackground, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 8 },
   ratingText: { fontSize: 10, fontWeight: 'bold', color: COLORS.warning, marginLeft: 2 },
   doctorCardName: { fontSize: 14, fontWeight: 'bold', color: COLORS.text, marginBottom: 4, textAlign: 'center' },
   doctorCardSpecialty: { fontSize: 12, color: COLORS.textLight, textAlign: 'center' },
-  clinicText: { fontSize: 12, color: '#888', marginTop: 2, marginBottom: 8 },
+  clinicText: { fontSize: 12, color: COLORS.textMuted, marginTop: 2, marginBottom: 8 },
   quickActionsContainer: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, marginBottom: 24 },
   quickActionCard: { flex: 1, backgroundColor: COLORS.white, borderRadius: 16, padding: 16, alignItems: 'center', shadowColor: COLORS.black, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 6, elevation: 3 },
   quickActionIcon: { width: 56, height: 56, borderRadius: 28, justifyContent: 'center', alignItems: 'center', marginBottom: 12 },
   quickActionText: { fontSize: 14, fontWeight: '600', color: COLORS.text, textAlign: 'center' },
-  nearbyBanner: { backgroundColor: '#FF7043', marginHorizontal: 20, borderRadius: 16, padding: 16, marginBottom: 24, shadowColor: '#FF7043', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 6 },
+  nearbyBanner: { backgroundColor: COLORS.orange, marginHorizontal: 20, borderRadius: 16, padding: 16, marginBottom: 24, shadowColor: COLORS.orange, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 6 },
   nearbyBannerContent: { flexDirection: 'row', alignItems: 'center' },
   nearbyBannerIcon: { width: 48, height: 48, borderRadius: 24, backgroundColor: 'rgba(255,255,255,0.2)', justifyContent: 'center', alignItems: 'center', marginRight: 12 },
   nearbyBannerTextContainer: { flex: 1 },
@@ -316,9 +313,9 @@ const styles = StyleSheet.create({
   searchResultInfo: { flex: 1 },
   searchResultName: { fontSize: 16, fontWeight: 'bold', color: COLORS.text, marginBottom: 4 },
   searchResultSpecialty: { fontSize: 14, color: COLORS.textLight, marginBottom: 2 },
-  searchResultClinic: { fontSize: 12, color: '#888' },
-  searchResultRating: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFF9E6', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 },
+  searchResultClinic: { fontSize: 12, color: COLORS.textMuted },
+  searchResultRating: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.warningBackground, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 },
   searchResultRatingText: { fontSize: 12, fontWeight: 'bold', color: COLORS.warning, marginLeft: 4 },
   noResultsContainer: { alignItems: 'center', justifyContent: 'center', paddingVertical: 40 },
-  noResultsText: { fontSize: 16, color: '#888', marginTop: 16 },
+  noResultsText: { fontSize: 16, color: COLORS.textMuted, marginTop: 16 },
 });

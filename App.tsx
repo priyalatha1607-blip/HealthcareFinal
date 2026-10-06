@@ -7,19 +7,17 @@ import { registerForPushNotificationsAsync } from "./src/services/notificationSe
 import { AppointmentProvider } from "./src/context/AppointmentContext";
 import { NotificationProvider } from "./src/context/NotificationContext";
 import { AuthProvider } from "./src/context/AuthContext";
+import AppNotificationListener from "./src/components/AppNotificationListener";
 
 export default function App() {
-  useEffect(() => {
-    // Push notifications removed to prevent device-specific errors
-  },[]);
 
-  
   return (
     <AuthProvider>
       <NotificationProvider>
         <AppointmentProvider>
           <SafeAreaProvider>
             <NavigationContainer>
+              <AppNotificationListener />
               <AppNavigator />
             </NavigationContainer>
           </SafeAreaProvider>

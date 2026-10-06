@@ -6,6 +6,7 @@ import { COLORS } from '../constants/colors';
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
 import { useAuth } from '../context/AuthContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'SignIn'>;
@@ -38,10 +39,11 @@ export default function SignIn({ navigation }: Props) {
   };
 
   return (
-    <KeyboardAvoidingView 
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
+    <SafeAreaView style={styles.safeArea}>
+      <KeyboardAvoidingView 
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <Text style={styles.title}>Welcome Back</Text>
@@ -88,13 +90,17 @@ export default function SignIn({ navigation }: Props) {
         />
       </ScrollView>
     </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: COLORS.background,
+  },
+  container: {
+    flex: 1,
   },
   scrollContent: {
     flexGrow: 1,

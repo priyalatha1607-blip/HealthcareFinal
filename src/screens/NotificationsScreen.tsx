@@ -15,8 +15,9 @@ export default function NotificationsScreen({ navigation }: Props) {
   const { notifications, markAllAsRead } = useNotifications();
 
   useEffect(() => {
-    // Mark notifications as read when the screen is focused
-    const unsubscribe = navigation.addListener('focus', () => {
+    // Mark notifications as read when the user LEAVES the screen, 
+    // so they can see which ones were unread while they are viewing it.
+    const unsubscribe = navigation.addListener('blur', () => {
       markAllAsRead();
     });
     return unsubscribe;
@@ -25,12 +26,12 @@ export default function NotificationsScreen({ navigation }: Props) {
   const renderIcon = (type: string) => {
     switch (type) {
       case 'booking':
-        return <MaterialCommunityIcons name="calendar-check" size={24} color="#2E7D32" />;
+        return <MaterialCommunityIcons name="calendar-check" size={24} color={ COLORS.success } />;
       case 'cancellation':
-        return <MaterialCommunityIcons name="calendar-remove" size={24} color="#E53935" />;
+        return <MaterialCommunityIcons name="calendar-remove" size={24} color={ COLORS.errorDark } />;
       case 'info':
       default:
-        return <MaterialCommunityIcons name="information" size={24} color="#1976D2" />;
+        return <MaterialCommunityIcons name="information" size={24} color={ COLORS.info } />;
     }
   };
 
@@ -46,7 +47,7 @@ export default function NotificationsScreen({ navigation }: Props) {
 
       {notifications.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <MaterialCommunityIcons name="bell-sleep-outline" size={64} color="#ccc" />
+          <MaterialCommunityIcons name="bell-sleep-outline" size={64} color={ COLORS.grayLight } />
           <Text style={styles.emptyText}>No notifications yet.</Text>
         </View>
       ) : (
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     backgroundColor: COLORS.white,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: COLORS.borderDivider,
   },
   backButton: {
     padding: 8,
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
   emptyText: {
     marginTop: 16,
     fontSize: 16,
-    color: '#888',
+    color: COLORS.textMuted,
   },
   listContainer: {
     padding: 16,
@@ -125,7 +126,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   unreadCard: {
-    backgroundColor: '#f0f8ff',
+    backgroundColor: COLORS.infoLight,
   },
   iconContainer: {
     marginRight: 16,
@@ -147,13 +148,13 @@ const styles = StyleSheet.create({
   },
   timestamp: {
     fontSize: 12,
-    color: '#999',
+    color: COLORS.textMuted,
   },
   unreadDot: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#E53935',
+    backgroundColor: COLORS.errorDark,
     alignSelf: 'center',
     marginLeft: 8,
   },

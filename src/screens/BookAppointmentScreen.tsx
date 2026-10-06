@@ -33,12 +33,12 @@ type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'BookAppointment'>;
 };
 
-export default function BookAppointmentScreen({ navigation }: Props) {
+export default function BookAppointmentScreen({ navigation, route }: any) {
   const { addAppointment } = useAppointments();
   const { addNotification } = useNotifications();
 
   const [form, setForm] = useState({
-    doctor: '',
+    doctor: route?.params?.doctorName || '',
     firstName: '',
     lastName: '',
     email: '',
@@ -182,16 +182,32 @@ export default function BookAppointmentScreen({ navigation }: Props) {
           {errors.date ? <Text style={styles.errorText}>{errors.date}</Text> : null}
           
           <View style={styles.labelsContainer}>
-            <Text style={styles.labelText}>Available Times | Serial No</Text>
+            <Text style={styles.labelText}>Available Times</Text>
           </View>
-          <View style={styles.inputContainer}>
-             <TextInput
-              style={[styles.input, errors.time && styles.inputError]}
-              placeholder="HH:MM AM/PM"
-              value={form.time}
-              onChangeText={(text) => setForm({ ...form, time: text })}
-            />
-          </View>
+          {form.date ? (
+            <View style={styles.timeSlotsContainer}>
+              {['09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '02:00 PM', '02:30 PM', '03:00 PM', '03:30 PM', '04:00 PM'].map((slot) => (
+                <TouchableOpacity
+                  key={slot}
+                  style={[
+                    styles.timeSlot,
+                    form.time === slot && styles.timeSlotSelected,
+                    errors.time && !form.time && styles.inputError
+                  ]}
+                  onPress={() => setForm({ ...form, time: slot })}
+                >
+                  <Text style={[
+                    styles.timeSlotText,
+                    form.time === slot && styles.timeSlotTextSelected
+                  ]}>
+                    {slot}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          ) : (
+            <Text style={styles.infoText}>Please select a date first to view available times.</Text>
+          )}
           {errors.time ? <Text style={styles.errorText}>{errors.time}</Text> : null}
 
           <View style={styles.labelsContainer}>
@@ -263,6 +279,21 @@ export default function BookAppointmentScreen({ navigation }: Props) {
           </View>
         </View>
       </Modal>
+      {showDateModal && (
+        <DateTimePicker
+          value={form.date ? new Date(form.date) : new Date()}
+          mode="date"
+          display="default"
+          minimumDate={new Date()}
+          onChange={(event: any, selectedDate?: Date) => {
+            setShowDateModal(false);
+            if (event.type === 'set' && selectedDate) {
+              const formattedDate = selectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+              setForm({ ...form, date: formattedDate });
+            }
+          }}
+        />
+      )}
       </SafeAreaView>
   );
 }
@@ -392,7 +423,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: COLORS.borderDivider,
   },
   modalItemImage: {
     width: 40,
@@ -408,5 +439,38 @@ const styles = StyleSheet.create({
   modalItemSpecialty: {
     fontSize: 14,
     color: COLORS.textLight,
+  },
+  timeSlotsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 4,
+  },
+  timeSlot: {
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: COLORS.borderMedium,
+    borderRadius: 8,
+    marginRight: 10,
+    marginBottom: 10,
+    backgroundColor: COLORS.white,
+  },
+  timeSlotSelected: {
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primary,
+  },
+  timeSlotText: {
+    fontSize: 14,
+    color: COLORS.text,
+  },
+  timeSlotTextSelected: {
+    color: COLORS.white,
+    fontWeight: 'bold',
+  },
+  infoText: {
+    color: COLORS.textMuted,
+    fontSize: 14,
+    marginBottom: 12,
+    fontStyle: 'italic',
   },
 });

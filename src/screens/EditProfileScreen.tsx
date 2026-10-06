@@ -35,6 +35,7 @@ export default function EditProfileScreen({ navigation }: Props) {
 
   const handleSave = () => {
     setUserProfile({
+      ...userProfile,
       name,
       email,
       phone,

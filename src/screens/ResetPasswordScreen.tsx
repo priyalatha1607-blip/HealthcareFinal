@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../constants/colors';
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
+import CustomModal from '../components/CustomModal';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'ResetPasswordScreen'>;
@@ -15,6 +16,7 @@ type Props = {
 export default function ResetPasswordScreen({ navigation }: Props) {
   const [newPassword, setNewPassword] = useState('');
   const [error, setError] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
 
   const handleUpdatePassword = () => {
     setError('');
@@ -25,18 +27,7 @@ export default function ResetPasswordScreen({ navigation }: Props) {
     }
     
     Keyboard.dismiss();
-    Alert.alert(
-      'Updated',
-      'Your password has been updated successfully.',
-      [
-        {
-          text: 'OK',
-          onPress: () => {
-            navigation.navigate('SignIn');
-          },
-        },
-      ]
-    );
+    setModalVisible(true);
   };
 
   return (
@@ -70,6 +61,19 @@ export default function ResetPasswordScreen({ navigation }: Props) {
         
         <CustomButton title="Update Password" onPress={handleUpdatePassword} />
       </View>
+      
+      <CustomModal
+        visible={modalVisible}
+        title="Password Updated"
+        message="Your password has been successfully updated. You can now sign in with your new password."
+        icon="check-circle"
+        iconColor={COLORS.primary}
+        confirmText="Sign In"
+        onConfirm={() => {
+          setModalVisible(false);
+          navigation.navigate('SignIn');
+        }}
+      />
     </KeyboardAvoidingView>
   );
 }

@@ -5,7 +5,7 @@ export type RootStackParamList = {
   SignUp: undefined;
   HomeScreen: undefined;
   ForgotPassword: undefined;
-  BookAppointment: undefined;
+  BookAppointment: { doctorName?: string };
   AboutUs: undefined;
   Notifications: undefined;
   Settings: undefined;
@@ -16,4 +16,10 @@ export type RootStackParamList = {
   ConsultDoctor: { issue: string };
   OTPScreen: { email: string };
   ResetPasswordScreen: { email: string };
+  HealthDetails: undefined;
+  Feedback: undefined;
+  TermsOfUse: undefined;
+  PrivacyPolicy: undefined;
+  HealthConsent: undefined;
+  DoctorProfile: { doctor: any };
 };

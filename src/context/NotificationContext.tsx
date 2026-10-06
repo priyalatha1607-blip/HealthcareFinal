@@ -1,4 +1,6 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export interface NotificationItem {
   id: string;
@@ -18,8 +20,32 @@ interface NotificationContextType {
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
+
 export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+
+  useEffect(() => {
+    const loadNotifications = async () => {
+      try {
+        const stored = await AsyncStorage.getItem('notifications');
+        if (stored) {
+          setNotifications(JSON.parse(stored));
+        }
+      } catch (error) {
+        console.error("Failed to load notifications", error);
+      }
+    };
+    loadNotifications();
+  }, []);
+
+  const saveNotifications = async (newNotifications: NotificationItem[]) => {
+    setNotifications(newNotifications);
+    try {
+      await AsyncStorage.setItem('notifications', JSON.stringify(newNotifications));
+    } catch (error) {
+      console.error("Failed to save notifications", error);
+    }
+  };
 
   const addNotification = (title: string, message: string, type: NotificationItem['type']) => {
     const newNotification: NotificationItem = {
@@ -30,14 +56,14 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
       isRead: false,
       type,
     };
-    setNotifications((prev) => [newNotification, ...prev]);
+    saveNotifications([newNotification, ...notifications]);
   };
 
   const markAllAsRead = () => {
-    setNotifications((prev) =>
-      prev.map((notif) => ({ ...notif, isRead: true }))
-    );
+    const updated = notifications.map((notif) => ({ ...notif, isRead: true }));
+    saveNotifications(updated);
   };
+
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 

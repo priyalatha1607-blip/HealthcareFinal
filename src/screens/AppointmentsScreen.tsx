@@ -68,8 +68,8 @@ export default function AppointmentsScreen() {
                   <Text style={styles.doctorName}>{apt.doctor}</Text>
                   <Text style={styles.specialty}>{apt.specialty}</Text>
                 </View>
-                <View style={[styles.statusBadge, { backgroundColor: apt.status === 'Confirmed' ? '#E8F5E9' : '#FFF3E0' }]}>
-                  <Text style={[styles.statusText, { color: apt.status === 'Confirmed' ? '#2E7D32' : '#E65100' }]}>{apt.status}</Text>
+                <View style={[styles.statusBadge, { backgroundColor: apt.status === 'Confirmed' ? COLORS.successLight : COLORS.orangeLight }]}>
+                  <Text style={[styles.statusText, { color: apt.status === 'Confirmed' ? COLORS.success : COLORS.orangeDark }]}>{apt.status}</Text>
                 </View>
               </View>
               <View style={styles.cardBody}>
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: COLORS.borderDivider,
     backgroundColor: COLORS.white,
   },
   logoContainer: {
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
+    borderTopColor: COLORS.borderDivider,
     paddingTop: 12,
   },
   dateTimeContainer: {
@@ -189,12 +189,12 @@ const styles = StyleSheet.create({
   },
   dateTimeText: {
     fontSize: 14,
-    color: '#444',
+    color: COLORS.textDark,
   },
   cardFooter: {
     marginTop: 12,
     borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
+    borderTopColor: COLORS.borderDivider,
     paddingTop: 12,
     alignItems: 'flex-end',
   },
@@ -202,11 +202,11 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 16,
     borderWidth: 1,
-    borderColor: '#E53935',
+    borderColor: COLORS.errorDark,
     borderRadius: 8,
   },
   cancelButtonText: {
-    color: '#E53935',
+    color: COLORS.errorDark,
     fontWeight: 'bold',
     fontSize: 13,
   },

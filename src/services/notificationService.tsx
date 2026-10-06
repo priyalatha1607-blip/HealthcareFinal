@@ -1,3 +1,4 @@
+import { Alert, Platform } from 'react-native';
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import Constants from "expo-constants";
@@ -5,7 +6,9 @@ import Constants from "expo-constants";
 export async function registerForPushNotificationsAsync() {
   if (!Device.isDevice) {
     console.log("Push notifications require a physical device.");
-    return;
+
+    // Allow Android emulators to try anyway (sometimes it works)
+    if (Platform.OS === 'ios') return;
   }
 
   // Check existing permission
@@ -24,6 +27,7 @@ export async function registerForPushNotificationsAsync() {
 
   if (finalStatus !== "granted") {
     console.log("Notification permission denied.");
+
     return;
   }
 
@@ -34,16 +38,24 @@ export async function registerForPushNotificationsAsync() {
 
   if (!projectId) {
     console.log("Project ID not found.");
+
     return;
   }
 
-  const token = (
-    await Notifications.getExpoPushTokenAsync({
-      projectId,
-    })
-  ).data;
+  try {
+    const token = (
+      await Notifications.getExpoPushTokenAsync({
+        projectId,
+      })
+    ).data;
 
-  console.log("Expo Push Token:", token);
+    console.log("Expo Push Token:", token);
+
+    return token;
+  } catch (error: any) {
+    console.log("Error getting token", error);
+
+  }
 
   return token;
 }

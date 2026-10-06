@@ -21,17 +21,17 @@ import {
 } from '../components/home/HomeComponents';
 
 const topDoctors = [
-  { id: '1', name: 'Dr. Jane Smith', specialty: 'Cardiologist', clinic: 'HeartCare Hospital', rating: '4.9', reviews: 120, image: 'https://i.pravatar.cc/150?img=47' },
-  { id: '3', name: 'Dr. Emily Chen', specialty: 'Pediatrician', clinic: 'Kids Wellness Center', rating: '4.7', reviews: 200, image: 'https://i.pravatar.cc/150?img=32' },
-  { id: '4', name: 'Dr. Richard Lee', specialty: 'General Practitioner', clinic: 'City Health Clinic', rating: '4.6', reviews: 150, image: 'https://i.pravatar.cc/150?img=12' },
+  { id: '1', name: 'Dr. Jane Smith', specialty: 'Cardiologist', clinic: 'HeartCare Hospital', rating: '4.9', reviews: 120, experience: '15+', patients: '1.2k+', image: 'https://i.pravatar.cc/150?img=47' },
+  { id: '3', name: 'Dr. Emily Chen', specialty: 'Pediatrician', clinic: 'Kids Wellness Center', rating: '4.7', reviews: 200, experience: '8+', patients: '850+', image: 'https://i.pravatar.cc/150?img=32' },
+  { id: '4', name: 'Dr. Richard Lee', specialty: 'General Practitioner', clinic: 'City Health Clinic', rating: '4.6', reviews: 150, experience: '11+', patients: '950+', image: 'https://i.pravatar.cc/150?img=12' },
 ];
 
 const categories = [
-  { id: '1', name: 'Dental', icon: 'tooth', color: '#E8F5E9', iconColor: '#4CAF50' },
-  { id: '2', name: 'Heart', icon: 'heart-pulse', color: '#FFEBEE', iconColor: '#F44336' },
-  { id: '3', name: 'Eye', icon: 'eye', color: '#E3F2FD', iconColor: '#2196F3' },
-  { id: '4', name: 'Brain', icon: 'brain', color: '#F3E5F5', iconColor: '#9C27B0' },
-  { id: '5', name: 'Bone', icon: 'bone', color: '#FFF3E0', iconColor: '#FF9800' },
+  { id: '1', name: 'Dental', icon: 'tooth', color: COLORS.primaryLight, iconColor: COLORS.primary },
+  { id: '2', name: 'Heart', icon: 'heart-pulse', color: COLORS.primaryLight, iconColor: COLORS.primary },
+  { id: '3', name: 'Eye', icon: 'eye', color: COLORS.primaryLight, iconColor: COLORS.primary },
+  { id: '4', name: 'Brain', icon: 'brain', color: COLORS.primaryLight, iconColor: COLORS.primary },
+  { id: '5', name: 'Bone', icon: 'bone', color: COLORS.primaryLight, iconColor: COLORS.primary },
 ];
 
 type Props = {
@@ -42,7 +42,7 @@ export default function HomeScreen({ navigation }: Props) {
   const { unreadCount } = useNotifications();
   const { appointments } = useAppointments();
   const upcomingApt = appointments.length > 0 ? appointments[0] : null;
-  const { email } = useAuth();
+  const { email, userProfile } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredDoctors = topDoctors.filter((doc) => {
@@ -60,7 +60,7 @@ export default function HomeScreen({ navigation }: Props) {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
         <HomeHeader 
-          userName={email ? email.split('@')[0] : 'Guest'} 
+          userName={userProfile?.name ? userProfile.name.split(' ')[0] : (email ? email.split('@')[0] : 'Guest')} 
           unreadCount={unreadCount} 
           onNotificationPress={() => navigation.navigate('Notifications')} 
         />
@@ -76,7 +76,7 @@ export default function HomeScreen({ navigation }: Props) {
           <>
             {upcomingApt && <UpcomingAppointment navigation={navigation} appointment={upcomingApt} />}
             <Categories categories={categories} navigation={navigation} />
-            <TopDoctors topDoctors={topDoctors} />
+            <TopDoctors topDoctors={topDoctors} navigation={navigation} />
             <QuickActions navigation={navigation} />
             <NearbyBanner navigation={navigation} />
             <ConsultOnline navigation={navigation} />

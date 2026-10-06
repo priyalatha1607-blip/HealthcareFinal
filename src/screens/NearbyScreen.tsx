@@ -43,8 +43,8 @@ export default function NearbyScreen({ navigation }: Props) {
   const renderItem = ({ item }: any) => {
     const isHospital = item.type === 'Hospital';
     const iconName = isHospital ? 'hospital-box' : 'pill';
-    const iconColor = isHospital ? '#E53935' : '#00897B';
-    const bgColor = isHospital ? '#FFEBEE' : COLORS.primaryLight;
+    const iconColor = isHospital ? COLORS.errorDark : COLORS.tealDark;
+    const bgColor = isHospital ? COLORS.errorLight : COLORS.primaryLight;
 
     return (
       <View style={styles.card}>
@@ -58,16 +58,16 @@ export default function NearbyScreen({ navigation }: Props) {
               <Text style={styles.typeText}>{item.type}</Text>
               <View style={styles.dot} />
               <Text style={styles.distanceText}>
-                <MaterialCommunityIcons name="map-marker" size={12} color="#888" /> {item.distance}
+                <MaterialCommunityIcons name="map-marker" size={12} color={ COLORS.textMuted } /> {item.distance}
               </Text>
             </View>
           </View>
           <View style={styles.statusContainer}>
-             <Text style={[styles.statusText, { color: item.open ? '#43A047' : '#E53935' }]}>
+             <Text style={[styles.statusText, { color: item.open ? COLORS.successDark : COLORS.errorDark }]}>
                {item.open ? 'Open' : 'Closed'}
              </Text>
              <View style={styles.ratingRow}>
-               <MaterialCommunityIcons name="star" size={14} color="#FBC02D" />
+               <MaterialCommunityIcons name="star" size={14} color={ COLORS.starDark } />
                <Text style={styles.ratingText}>{item.rating}</Text>
              </View>
           </View>
@@ -226,12 +226,12 @@ const styles = StyleSheet.create({
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#ccc',
+    backgroundColor: COLORS.grayLight,
     marginHorizontal: 6,
   },
   distanceText: {
     fontSize: 12,
-    color: '#888',
+    color: COLORS.textMuted,
   },
   statusContainer: {
     alignItems: 'flex-end',
@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
+    borderTopColor: COLORS.borderDivider,
     paddingTop: 16,
   },
   actionButton: {

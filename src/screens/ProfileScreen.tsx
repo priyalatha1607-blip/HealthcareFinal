@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Image, Share, Linking } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -7,38 +7,60 @@ import { RootStackParamList } from '../components/navigation/types';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../constants/colors';
 import { useAuth } from '../context/AuthContext';
-import { Image } from 'react-native';
+import CustomModal from '../components/CustomModal';
+
+const MenuItem = ({ icon, label, onPress, color = COLORS.infoSecondary }: any) => (
+  <TouchableOpacity style={styles.menuItem} onPress={onPress}>
+    <View style={styles.menuIconContainer}>
+      <MaterialCommunityIcons name={icon} size={22} color={color} />
+    </View>
+    <Text style={styles.menuLabel}>{label}</Text>
+  </TouchableOpacity>
+);
+
+const AccordionMenu = ({ icon, label, children, color = COLORS.infoSecondary }: any) => {
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <View style={styles.accordionContainer}>
+      <TouchableOpacity style={styles.menuItem} onPress={() => setExpanded(!expanded)}>
+        <View style={styles.menuIconContainer}>
+          <MaterialCommunityIcons name={icon} size={22} color={color} />
+        </View>
+        <Text style={styles.menuLabel}>{label}</Text>
+        <MaterialCommunityIcons name={expanded ? "chevron-up" : "chevron-down"} size={24} color={COLORS.textLight} />
+      </TouchableOpacity>
+      {expanded && <View style={styles.accordionContent}>{children}</View>}
+    </View>
+  );
+};
 
 export default function ProfileScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  
   const { userProfile: userDetails } = useAuth();
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
 
   const handleLogout = () => {
-    Alert.alert(
-      "Log Out",
-      "Are you sure you want to log out?",
-      [
-        { text: "Cancel", style: "cancel" },
-        { 
-          text: "Log Out", 
-          style: "destructive",
-          onPress: () => navigation.replace('SignIn')
-        }
-      ]
-    );
+    setLogoutModalVisible(true);
+  };
+
+  const handleShare = async () => {
+    try {
+      await Share.share({
+        message: 'Check out this awesome Healthcare App! Book appointments with top doctors instantly.',
+      });
+    } catch (error) {}
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top']}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>My Profile</Text>
-        <TouchableOpacity style={styles.editHeaderButton} onPress={() => navigation.navigate('EditProfile')}>
-          <MaterialCommunityIcons name="square-edit-outline" size={24} color={COLORS.primary} />
-        </TouchableOpacity>
+        <View style={styles.headerTitleContainer}>
+          <Text style={styles.headerTitle}>Hello {userDetails.name ? userDetails.name.split(' ')[0] : 'User'}</Text>
+        </View>
       </View>
       
-      <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent}>
+      <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        
         <View style={styles.profileHeader}>
           <View style={styles.avatarContainer}>
             {userDetails.avatar ? <Image source={{ uri: userDetails.avatar }} style={{ width: 100, height: 100, borderRadius: 50 }} /> : <MaterialCommunityIcons name="account" size={60} color={COLORS.primary} />}
@@ -48,57 +70,102 @@ export default function ProfileScreen() {
           </View>
           <Text style={styles.userName}>{userDetails.name}</Text>
           <Text style={styles.userEmailHeader}>{userDetails.email}</Text>
-          
-          <TouchableOpacity style={styles.editProfileButton} onPress={() => navigation.navigate('EditProfile')}>
-            <Text style={styles.editProfileButtonText}>Edit Profile</Text>
-          </TouchableOpacity>
         </View>
 
-        <View style={styles.infoSection}>
-          <Text style={styles.sectionTitle}>Personal Information</Text>
+        <View style={styles.menuSection}>
+          <AccordionMenu icon="account-details" label="Personal Details">
+            <View style={styles.infoRow}>
+              <View style={styles.infoContent}>
+                <Text style={styles.infoLabel}>Name</Text>
+                <Text style={styles.infoValue}>{userDetails.name}</Text>
+              </View>
+            </View>
+            <View style={styles.infoRow}>
+              <View style={styles.infoContent}>
+                <Text style={styles.infoLabel}>Email ID</Text>
+                <Text style={styles.infoValue}>{userDetails.email}</Text>
+              </View>
+            </View>
+            <View style={styles.infoRow}>
+              <View style={styles.infoContent}>
+                <Text style={styles.infoLabel}>Phone Number</Text>
+                <Text style={styles.infoValue}>{userDetails.phone}</Text>
+              </View>
+            </View>
+            <View style={styles.infoRow}>
+              <View style={styles.infoContent}>
+                <Text style={styles.infoLabel}>Age</Text>
+                <Text style={styles.infoValue}>{userDetails.age} Years</Text>
+              </View>
+            </View>
+            
+            <TouchableOpacity style={styles.editProfileButton} onPress={() => navigation.navigate('EditProfile')}>
+              <Text style={styles.editProfileButtonText}>Edit Profile</Text>
+            </TouchableOpacity>
+          </AccordionMenu>
+
+          <MenuItem icon="heart-pulse" label="Health Details" onPress={() => navigation.navigate('HealthDetails')} />
+
+          <MenuItem icon="message-star" label="Feedback" onPress={() => navigation.navigate('Feedback')} />
           
-          <View style={styles.infoRow}>
-            <MaterialCommunityIcons name="account-outline" size={24} color={COLORS.textLight} style={styles.infoIcon} />
-            <View style={styles.infoContent}>
-              <Text style={styles.infoLabel}>Name</Text>
-              <Text style={styles.infoValue}>{userDetails.name}</Text>
-            </View>
-          </View>
+          <MenuItem 
+            icon="ambulance" 
+            label="Emergency Ambulance" 
+            onPress={() => {
+              Alert.alert(
+                "Emergency", 
+                "Are you sure you want to call an Ambulance?", 
+                [
+                  { text: "Cancel", style: "cancel" },
+                  { text: "Call Now", style: "destructive", onPress: () => Linking.openURL('tel:108') }
+                ]
+              );
+            }} 
+          />
 
-          <View style={styles.infoRow}>
-            <MaterialCommunityIcons name="email-outline" size={24} color={COLORS.textLight} style={styles.infoIcon} />
-            <View style={styles.infoContent}>
-              <Text style={styles.infoLabel}>Email ID</Text>
-              <Text style={styles.infoValue}>{userDetails.email}</Text>
-            </View>
-          </View>
-
-          <View style={styles.infoRow}>
-            <MaterialCommunityIcons name="phone-outline" size={24} color={COLORS.textLight} style={styles.infoIcon} />
-            <View style={styles.infoContent}>
-              <Text style={styles.infoLabel}>Phone Number</Text>
-              <Text style={styles.infoValue}>{userDetails.phone}</Text>
-            </View>
-          </View>
-
-          <View style={styles.infoRow}>
-            <MaterialCommunityIcons name="calendar-account-outline" size={24} color={COLORS.textLight} style={styles.infoIcon} />
-            <View style={[styles.infoContent, { borderBottomWidth: 0 }]}>
-              <Text style={styles.infoLabel}>Age</Text>
-              <Text style={styles.infoValue}>{userDetails.age} Years</Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.actionSection}>
-          <TouchableOpacity style={[styles.actionMenu, { borderBottomWidth: 0 }]} onPress={handleLogout}>
-            <View style={styles.actionMenuLeft}>
-              <MaterialCommunityIcons name="logout" size={24} color="#E53935" />
-              <Text style={[styles.actionMenuText, { color: '#E53935' }]}>Log Out</Text>
-            </View>
-          </TouchableOpacity>
+          <AccordionMenu icon="cog" label="Settings">
+            <TouchableOpacity style={styles.subMenuItem} onPress={handleShare}>
+              <MaterialCommunityIcons name="share-variant" size={20} color={ COLORS.infoSecondary } style={styles.subMenuIcon} />
+              <Text style={styles.subMenuLabel}>Share</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.subMenuItem} onPress={() => navigation.navigate('TermsOfUse')}>
+              <MaterialCommunityIcons name="clipboard-text" size={20} color={ COLORS.infoSecondary } style={styles.subMenuIcon} />
+              <Text style={styles.subMenuLabel}>Terms of Use</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.subMenuItem} onPress={() => navigation.navigate('PrivacyPolicy')}>
+              <MaterialCommunityIcons name="shield-lock" size={20} color={ COLORS.infoSecondary } style={styles.subMenuIcon} />
+              <Text style={styles.subMenuLabel}>Privacy Policy</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.subMenuItem} onPress={() => navigation.navigate('HealthConsent')}>
+              <MaterialCommunityIcons name="clipboard-check" size={20} color={ COLORS.infoSecondary } style={styles.subMenuIcon} />
+              <Text style={styles.subMenuLabel}>Health Records Consent</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.subMenuItem} onPress={() => navigation.navigate('AboutUs')}>
+              <MaterialCommunityIcons name="information" size={20} color={ COLORS.infoSecondary } style={styles.subMenuIcon} />
+              <Text style={styles.subMenuLabel}>About Us</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.subMenuItem} onPress={handleLogout}>
+              <MaterialCommunityIcons name="power" size={20} color={ COLORS.errorDark } style={styles.subMenuIcon} />
+              <Text style={[styles.subMenuLabel, { color: COLORS.errorDark }]}>Logout</Text>
+            </TouchableOpacity>
+          </AccordionMenu>
         </View>
       </ScrollView>
+
+      <CustomModal
+        visible={logoutModalVisible}
+        title="Log Out"
+        message="Are you sure you want to log out of your account?"
+        icon="logout"
+        iconColor={ COLORS.errorDark }
+        confirmText="Log Out"
+        onConfirm={() => {
+          setLogoutModalVisible(false);
+          navigation.replace('SignIn');
+        }}
+        cancelText="Cancel"
+        onCancel={() => setLogoutModalVisible(false)}
+      />
     </SafeAreaView>
   );
 }
@@ -106,7 +173,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: COLORS.inputBackground,
+    backgroundColor: COLORS.backgroundLight,
   },
   header: {
     flexDirection: 'row',
@@ -117,6 +184,10 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.borderLight,
+  },
+  headerTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   headerTitle: {
     fontSize: 22,
@@ -138,7 +209,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     borderRadius: 16,
     padding: 24,
-    marginBottom: 16,
+    marginBottom: 24,
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
@@ -179,55 +250,72 @@ const styles = StyleSheet.create({
   userEmailHeader: {
     fontSize: 14,
     color: COLORS.textLight,
-    marginBottom: 16,
   },
-  editProfileButton: {
-    backgroundColor: COLORS.primary,
-    paddingVertical: 10,
-    paddingHorizontal: 24,
-    borderRadius: 20,
-  },
-  editProfileButtonText: {
-    color: COLORS.white,
-    fontWeight: '600',
-    fontSize: 14,
-  },
-  infoSection: {
+  menuSection: {
     backgroundColor: COLORS.white,
     borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
+    paddingVertical: 8,
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 3,
   },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+  },
+  menuIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: COLORS.infoBackground,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  menuLabel: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: '500',
     color: COLORS.text,
-    marginBottom: 20,
+  },
+  accordionContainer: {
+    // optional bottom border if needed
+  },
+  accordionContent: {
+    paddingLeft: 76,
+    paddingRight: 20,
+    paddingBottom: 16,
+  },
+  subMenuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+  },
+  subMenuIcon: {
+    marginRight: 16,
+  },
+  subMenuLabel: {
+    fontSize: 15,
+    color: COLORS.textSecondary,
+    fontWeight: '500',
   },
   infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  infoIcon: {
-    marginRight: 16,
-    backgroundColor: COLORS.inputBackground,
-    padding: 10,
-    borderRadius: 12,
-  },
   infoContent: {
     flex: 1,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
-    paddingVertical: 12,
+    borderBottomColor: COLORS.borderDivider,
+    paddingVertical: 10,
   },
   infoLabel: {
     fontSize: 12,
-    color: '#888',
+    color: COLORS.textMuted,
     marginBottom: 4,
   },
   infoValue: {
@@ -235,32 +323,17 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     fontWeight: '500',
   },
-  actionSection: {
-    backgroundColor: COLORS.white,
-    borderRadius: 16,
-    paddingHorizontal: 20,
-    shadowColor: COLORS.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  actionMenu: {
-    flexDirection: 'row',
+  editProfileButton: {
+    backgroundColor: COLORS.primary,
+    paddingVertical: 12,
+    borderRadius: 12,
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    marginTop: 16,
+    marginBottom: 8,
   },
-  actionMenuLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  actionMenuText: {
-    fontSize: 16,
-    color: COLORS.text,
-    marginLeft: 16,
-    fontWeight: '500',
+  editProfileButtonText: {
+    color: COLORS.white,
+    fontWeight: '600',
+    fontSize: 15,
   },
 });
