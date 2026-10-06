@@ -77,7 +77,7 @@ export default function DoctorProfileScreen({ navigation, route }: Props) {
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>About Doctor</Text>
           <Text style={styles.aboutText}>
-            {doctor.name} is a renowned {doctor.specialty} with over 10 years of experience in treating various conditions. Dedicated to providing the best patient care and utilizing the latest advancements in the field.
+            {doctor.name} is a renowned {doctor.specialty} with over {parseInt(doctor.experience) || 12} years of experience in treating various conditions. Dedicated to providing the best patient care and utilizing the latest advancements in the field.
           </Text>
         </View>
 

@@ -8,16 +8,16 @@ import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../constants/colors';
 
 const allDoctors = [
-  { id: '1', name: 'Dr. Abu Saifuddin', position: 'Assistant Professor', specialty: 'Neuromedicine', degree: 'MD , M.PHIL, PHD', experience: '14+', patients: '1.5k+', image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=150&h=150&fit=crop', searchTerms: ['brain', 'neuromedicine', 'neurologist'] },
-  { id: '2', name: 'Dr. James Merry', position: 'Assistant Professor', specialty: 'Gynae and Obs', degree: 'MD ,M.PHIL, PHD', experience: '12+', patients: '900+', image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop', searchTerms: ['gynae', 'obstetrics'] },
-  { id: '3', name: 'Dr. William Henry', position: 'Assistant Professor', specialty: 'Brain Tumor', degree: 'MD ,M.PHIL, PHD', experience: '20+', patients: '2.1k+', image: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=150&h=150&fit=crop', searchTerms: ['brain', 'tumor'] },
-  { id: '4', name: 'Dr. Jane Smith', position: 'Senior Consultant', specialty: 'Cardiologist', degree: 'MBBS, MD', experience: '15+', patients: '1.2k+', image: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=150&h=150&fit=crop', searchTerms: ['heart', 'cardiologist'] },
-  { id: '5', name: 'Dr. Michael Brown', position: 'Consultant', specialty: 'Neurologist', degree: 'MBBS, MD, DM', experience: '8+', patients: '750+', image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&h=150&fit=crop', searchTerms: ['brain', 'neurologist'] },
-  { id: '6', name: 'Dr. Mark Davis', position: 'Senior Dentist', specialty: 'Dentist', degree: 'BDS, MDS', experience: '18+', patients: '3k+', image: 'https://images.unsplash.com/photo-1582750433449-648ed127d09e?w=150&h=150&fit=crop', searchTerms: ['dental', 'dentist', 'teeth'] },
-  { id: '7', name: 'Dr. Emily Chen', position: 'Consultant', specialty: 'Ophthalmologist', degree: 'MBBS, MS', experience: '8+', patients: '850+', image: 'https://images.unsplash.com/photo-1527613426441-4da17471b66d?w=150&h=150&fit=crop', searchTerms: ['eye', 'ophthalmologist', 'vision'] },
-  { id: '8', name: 'Dr. Sarah Wilson', position: 'Orthopedic Surgeon', specialty: 'Orthopedist', degree: 'MBBS, MS Ortho', experience: '10+', patients: '600+', image: 'https://images.unsplash.com/photo-1614608682850-e0d6ed316d47?w=150&h=150&fit=crop', searchTerms: ['bone', 'orthopedist', 'ortho'] },
-  { id: '9', name: 'Dr. David Lee', position: 'Consultant Dentist', specialty: 'Orthodontist', degree: 'BDS, MDS', experience: '5+', patients: '400+', image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop', searchTerms: ['dental', 'dentist'] },
-  { id: '10', name: 'Dr. Robert Taylor', position: 'Senior Cardiologist', specialty: 'Cardiologist', degree: 'MBBS, MD', experience: '25+', patients: '5k+', image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=150&h=150&fit=crop', searchTerms: ['heart', 'cardiologist'] },
+  { id: '1', name: 'Dr. Abu Saifuddin', position: 'Assistant Professor', specialty: 'Neuromedicine', degree: 'MD , M.PHIL, PHD', experience: '14+', patients: '1.5k+', image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=150&h=150&fit=crop', searchTerms: ['brain', 'neuromedicine', 'neurologist', 'neurology'] },
+  { id: '2', name: 'Dr. James Merry', position: 'Assistant Professor', specialty: 'Gynae and Obs', degree: 'MD ,M.PHIL, PHD', experience: '12+', patients: '900+', image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop', searchTerms: ['gynae', 'obstetrics', 'gynecology', 'women'] },
+  { id: '3', name: 'Dr. William Henry', position: 'Assistant Professor', specialty: 'Brain Tumor', degree: 'MD ,M.PHIL, PHD', experience: '20+', patients: '2.1k+', image: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=150&h=150&fit=crop', searchTerms: ['brain', 'tumor', 'neurology', 'oncology'] },
+  { id: '4', name: 'Dr. Jane Smith', position: 'Senior Consultant', specialty: 'Cardiologist', degree: 'MBBS, MD', experience: '15+', patients: '1.2k+', image: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=150&h=150&fit=crop', searchTerms: ['heart', 'cardiologist', 'cardiology'] },
+  { id: '5', name: 'Dr. Michael Brown', position: 'Consultant', specialty: 'Neurologist', degree: 'MBBS, MD, DM', experience: '8+', patients: '750+', image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&h=150&fit=crop', searchTerms: ['brain', 'neurologist', 'neurology', 'psychiatry'] },
+  { id: '6', name: 'Dr. Mark Davis', position: 'Senior Dentist', specialty: 'Dentist', degree: 'BDS, MDS', experience: '18+', patients: '3k+', image: 'https://images.unsplash.com/photo-1582750433449-648ed127d09e?w=150&h=150&fit=crop', searchTerms: ['dental', 'dentist', 'teeth', 'dentistry'] },
+  { id: '7', name: 'Dr. Emily Chen', position: 'Consultant', specialty: 'Ophthalmologist', degree: 'MBBS, MS', experience: '8+', patients: '850+', image: 'https://images.unsplash.com/photo-1527613426441-4da17471b66d?w=150&h=150&fit=crop', searchTerms: ['eye', 'ophthalmologist', 'vision', 'ophthalmology'] },
+  { id: '8', name: 'Dr. Sarah Wilson', position: 'Orthopedic Surgeon', specialty: 'Orthopedist', degree: 'MBBS, MS Ortho', experience: '10+', patients: '600+', image: 'https://images.unsplash.com/photo-1614608682850-e0d6ed316d47?w=150&h=150&fit=crop', searchTerms: ['bone', 'orthopedist', 'ortho', 'orthopedics'] },
+  { id: '9', name: 'Dr. David Lee', position: 'Consultant Dentist', specialty: 'Orthodontist', degree: 'BDS, MDS', experience: '5+', patients: '400+', image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop', searchTerms: ['dental', 'dentist', 'pediatrics', 'dermatology'] },
+  { id: '10', name: 'Dr. Robert Taylor', position: 'Senior Cardiologist', specialty: 'Cardiologist', degree: 'MBBS, MD', experience: '25+', patients: '5k+', image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=150&h=150&fit=crop', searchTerms: ['heart', 'cardiologist', 'cardiology'] },
 ];
 
 export default function DoctorScreen({ route }: any) {
@@ -31,7 +31,7 @@ export default function DoctorScreen({ route }: any) {
   }, [route?.params?.category]);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('tabPress', () => {
+    const unsubscribe = (navigation as any).addListener('tabPress', () => {
       setSearchQuery('');
       navigation.setParams({ category: undefined });
     });

@@ -117,6 +117,42 @@ export const Categories = ({ categories, navigation }: any) => (
   </View>
 );
 
+
+export const CentersOfExcellence = ({ onCenterPress }: { onCenterPress?: (center: any) => void }) => {
+  const centers = [
+    { id: '1', name: 'Adyar Cancer Institute', specialty: 'Best for Oncology', icon: 'ribbon', rating: '4.9', bg: COLORS.errorLight, color: COLORS.errorDark },
+    { id: '2', name: 'Apollo Hospitals', specialty: 'Best for Cardiology', icon: 'heart-pulse', rating: '4.8', bg: COLORS.infoBackground, color: COLORS.info },
+    { id: '3', name: 'MIOT International', specialty: 'Best for Orthopedics', icon: 'bone', rating: '4.7', bg: COLORS.orangeLight, color: COLORS.orangeDark },
+    { id: '4', name: 'Neuro Foundation', specialty: 'Best for Neurology', icon: 'brain', rating: '4.8', bg: COLORS.tealLight, color: COLORS.tealDark },
+  ];
+  return (
+    <View style={styles.sectionContainer}>
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Specialty Centers</Text>
+      </View>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalScrollPadding}>
+        {centers.map((center) => (
+          <TouchableOpacity 
+            key={center.id} 
+            style={[styles.doctorCard, { width: 220 }]}
+            onPress={() => onCenterPress && onCenterPress(center)}
+          >
+            <View style={[styles.categoryIconContainer, { backgroundColor: center.bg, alignSelf: 'flex-start', marginBottom: 12 }]}>
+              <MaterialCommunityIcons name={center.icon as any} size={28} color={center.color} />
+            </View>
+            <View style={{ position: 'absolute', top: 16, right: 16, flexDirection: 'row', alignItems: 'center' }}>
+              <MaterialCommunityIcons name="star" size={14} color={COLORS.star} />
+              <Text style={styles.ratingText}>{center.rating}</Text>
+            </View>
+            <Text style={[styles.doctorCardName, { textAlign: 'left', marginTop: 4 }]} numberOfLines={1}>{center.name}</Text>
+            <Text style={[styles.doctorCardSpecialty, { textAlign: 'left' }]}>{center.specialty}</Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    </View>
+  );
+};
+
 export const TopDoctors = ({ topDoctors, navigation }: any) => (
   <View style={styles.sectionContainer}>
     <View style={styles.sectionHeader}>

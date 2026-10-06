@@ -20,6 +20,7 @@ import { RootStackParamList } from '../components/navigation/types';
 import { useAppointments } from '../context/AppointmentContext';
 import { useNotifications } from '../context/NotificationContext';
 import { COLORS } from '../constants/colors';
+import CustomModal from '../components/CustomModal';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const doctorsList = [
@@ -49,6 +50,8 @@ export default function BookAppointmentScreen({ navigation, route }: any) {
   });
 
   const [errors, setErrors] = useState<any>({});
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalConfig, setModalConfig] = useState({ title: '', message: '', icon: 'alert-circle', iconColor: COLORS.errorDark, isSuccess: false });
   const [showDoctorModal, setShowDoctorModal] = useState(false);
   const [showDateModal, setShowDateModal] = useState(false);
   const [availableDoctorDates, setAvailableDoctorDates] = useState<string[]>([]);
@@ -88,11 +91,9 @@ export default function BookAppointmentScreen({ navigation, route }: any) {
         'booking'
       );
 
-      Alert.alert('Success', 'Appointment booked successfully!', [
-        { text: 'OK', onPress: () => navigation.goBack() }
-      ]);
+      setModalConfig({ title: 'Success', message: 'Appointment booked successfully!', icon: 'check-circle', iconColor: COLORS.success, isSuccess: true }); setModalVisible(true);
     } else {
-      Alert.alert('Error', 'Please fill all required fields correctly.');
+      setModalConfig({ title: 'Validation Error', message: 'Please fill all required fields correctly.', icon: 'alert-circle', iconColor: COLORS.errorDark, isSuccess: false }); setModalVisible(true);
     }
   };
 
@@ -124,48 +125,26 @@ export default function BookAppointmentScreen({ navigation, route }: any) {
           </TouchableOpacity>
           {errors.doctor ? <Text style={styles.errorText}>{errors.doctor}</Text> : null}
 
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={[styles.input, errors.firstName && styles.inputError]}
-              placeholder="First Name"
-              value={form.firstName}
-              onChangeText={(text) => setForm({ ...form, firstName: text })}
-            />
-          </View>
-          {errors.firstName ? <Text style={styles.errorText}>{errors.firstName}</Text> : null}
-
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={[styles.input, errors.lastName && styles.inputError]}
-              placeholder="Last Name"
-              value={form.lastName}
-              onChangeText={(text) => setForm({ ...form, lastName: text })}
-            />
-          </View>
-          {errors.lastName ? <Text style={styles.errorText}>{errors.lastName}</Text> : null}
-
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={[styles.input, errors.email && styles.inputError]}
-              placeholder="Email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              value={form.email}
-              onChangeText={(text) => setForm({ ...form, email: text })}
-            />
-          </View>
-          {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
-
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={[styles.input, errors.phone && styles.inputError]}
-              placeholder="Phone"
-              keyboardType="phone-pad"
-              value={form.phone}
-              onChangeText={(text) => setForm({ ...form, phone: text })}
-            />
-          </View>
-          {errors.phone ? <Text style={styles.errorText}>{errors.phone}</Text> : null}
+          {[
+            { key: 'firstName', placeholder: 'First Name' },
+            { key: 'lastName', placeholder: 'Last Name' },
+            { key: 'email', placeholder: 'Email', keyboardType: 'email-address', autoCapitalize: 'none' },
+            { key: 'phone', placeholder: 'Phone Number', keyboardType: 'phone-pad' },
+          ].map((field) => (
+            <React.Fragment key={field.key}>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={[styles.input, errors[field.key] && styles.inputError]}
+                  placeholder={field.placeholder}
+                  keyboardType={field.keyboardType as any || 'default'}
+                  autoCapitalize={field.autoCapitalize as any || 'sentences'}
+                  value={(form as any)[field.key]}
+                  onChangeText={(text) => setForm({ ...form, [field.key]: text })}
+                />
+              </View>
+              {errors[field.key] ? <Text style={styles.errorText}>{errors[field.key]}</Text> : null}
+            </React.Fragment>
+          ))}
 
           <View style={styles.labelsContainer}>
             <Text style={styles.labelText}>Available Dates</Text>
@@ -294,7 +273,22 @@ export default function BookAppointmentScreen({ navigation, route }: any) {
           }}
         />
       )}
-      </SafeAreaView>
+  
+      <CustomModal 
+        visible={modalVisible}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        icon={modalConfig.icon}
+        iconColor={modalConfig.iconColor}
+        onConfirm={() => {
+          setModalVisible(false);
+          if (modalConfig.isSuccess) {
+            navigation.goBack();
+          }
+        }}
+      />
+
+    </SafeAreaView>
   );
 }
 

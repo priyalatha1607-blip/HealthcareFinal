@@ -7,12 +7,14 @@ import { useNotifications } from '../context/NotificationContext';
 import { useAppointments } from '../context/AppointmentContext';
 import { useAuth } from '../context/AuthContext';
 import { COLORS } from '../constants/colors';
+import CustomModal from '../components/CustomModal';
 import { 
   HomeHeader, 
   SearchBar, 
   SearchResultsView, 
   UpcomingAppointment, 
   Categories, 
+  CentersOfExcellence,
   TopDoctors, 
   QuickActions, 
   NearbyBanner, 
@@ -27,11 +29,16 @@ const topDoctors = [
 ];
 
 const categories = [
-  { id: '1', name: 'Dental', icon: 'tooth', color: COLORS.primaryLight, iconColor: COLORS.primary },
-  { id: '2', name: 'Heart', icon: 'heart-pulse', color: COLORS.primaryLight, iconColor: COLORS.primary },
-  { id: '3', name: 'Eye', icon: 'eye', color: COLORS.primaryLight, iconColor: COLORS.primary },
-  { id: '4', name: 'Brain', icon: 'brain', color: COLORS.primaryLight, iconColor: COLORS.primary },
-  { id: '5', name: 'Bone', icon: 'bone', color: COLORS.primaryLight, iconColor: COLORS.primary },
+  { id: '1', name: 'Oncology', icon: 'ribbon', color: COLORS.primaryLight, iconColor: COLORS.primary },
+  { id: '2', name: 'Cardiology', icon: 'heart-pulse', color: COLORS.primaryLight, iconColor: COLORS.primary },
+  { id: '3', name: 'Neurology', icon: 'brain', color: COLORS.primaryLight, iconColor: COLORS.primary },
+  { id: '4', name: 'Orthopedics', icon: 'bone', color: COLORS.primaryLight, iconColor: COLORS.primary },
+  { id: '5', name: 'Gynecology', icon: 'gender-female', color: COLORS.primaryLight, iconColor: COLORS.primary },
+  { id: '6', name: 'Pediatrics', icon: 'baby-bottle-outline', color: COLORS.primaryLight, iconColor: COLORS.primary },
+  { id: '7', name: 'Dermatology', icon: 'face-man', color: COLORS.primaryLight, iconColor: COLORS.primary },
+  { id: '8', name: 'Dentistry', icon: 'tooth', color: COLORS.primaryLight, iconColor: COLORS.primary },
+  { id: '9', name: 'Ophthalmology', icon: 'eye', color: COLORS.primaryLight, iconColor: COLORS.primary },
+  { id: '10', name: 'Psychiatry', icon: 'head-lightbulb', color: COLORS.primaryLight, iconColor: COLORS.primary },
 ];
 
 type Props = {
@@ -44,6 +51,8 @@ export default function HomeScreen({ navigation }: Props) {
   const upcomingApt = appointments.length > 0 ? appointments[0] : null;
   const { email, userProfile } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
+  const [coeModalVisible, setCoeModalVisible] = useState(false);
+  const [selectedCoe, setSelectedCoe] = useState<any>(null);
 
   const filteredDoctors = topDoctors.filter((doc) => {
     if (!doc.name || !doc.image || !doc.specialty) return false;
@@ -76,6 +85,10 @@ export default function HomeScreen({ navigation }: Props) {
           <>
             {upcomingApt && <UpcomingAppointment navigation={navigation} appointment={upcomingApt} />}
             <Categories categories={categories} navigation={navigation} />
+            <CentersOfExcellence onCenterPress={(center) => {
+              setSelectedCoe(center);
+              setCoeModalVisible(true);
+            }} />
             <TopDoctors topDoctors={topDoctors} navigation={navigation} />
             <QuickActions navigation={navigation} />
             <NearbyBanner navigation={navigation} />
@@ -84,6 +97,15 @@ export default function HomeScreen({ navigation }: Props) {
           </>
         )}
       </ScrollView>
+      <CustomModal 
+        visible={coeModalVisible} 
+        title={selectedCoe?.name || ''} 
+        message={`Specialty: ${selectedCoe?.specialty || ''}\n\nAddress: No. 12, Main Road, Chennai.\nContact: 044-12345678`} 
+        icon="hospital-building" 
+        iconColor={selectedCoe?.color || COLORS.primary} 
+        onConfirm={() => setCoeModalVisible(false)} 
+        confirmText="Close"
+      />
     </SafeAreaView>
   );
 }

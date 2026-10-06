@@ -1,4 +1,6 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export interface Appointment {
   id: string;
@@ -22,20 +24,45 @@ interface AppointmentContextType {
 
 const AppointmentContext = createContext<AppointmentContextType | undefined>(undefined);
 
+
 export const AppointmentProvider = ({ children }: { children: ReactNode }) => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+
+  useEffect(() => {
+    const loadAppointments = async () => {
+      try {
+        const stored = await AsyncStorage.getItem('appointments');
+        if (stored) {
+          setAppointments(JSON.parse(stored));
+        }
+      } catch (error) {
+        console.error("Failed to load appointments", error);
+      }
+    };
+    loadAppointments();
+  }, []);
+
+  const saveAppointments = async (newAppointments: Appointment[]) => {
+    setAppointments(newAppointments);
+    try {
+      await AsyncStorage.setItem('appointments', JSON.stringify(newAppointments));
+    } catch (error) {
+      console.error("Failed to save appointments", error);
+    }
+  };
 
   const addAppointment = (appointmentData: Omit<Appointment, 'id'>) => {
     const newAppointment: Appointment = {
       ...appointmentData,
       id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
     };
-    setAppointments((prev) => [...prev, newAppointment]);
+    saveAppointments([...appointments, newAppointment]);
   };
 
   const cancelAppointment = (id: string) => {
-    setAppointments((prev) => prev.filter((app) => app.id !== id));
+    saveAppointments(appointments.filter((app) => app.id !== id));
   };
+
 
   return (
     <AppointmentContext.Provider value={{ appointments, addAppointment, cancelAppointment }}>

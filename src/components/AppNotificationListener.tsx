@@ -5,7 +5,8 @@ import { registerForPushNotificationsAsync } from '../services/notificationServi
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
-    shouldShowAlert: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
     shouldPlaySound: true,
     shouldSetBadge: false,
   }),
@@ -36,7 +37,7 @@ export default function AppNotificationListener() {
       subscription.remove();
       responseSubscription.remove();
     };
-  }, [addNotification]);
+  }, []);
 
   return null;
 }

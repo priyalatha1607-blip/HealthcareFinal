@@ -57,5 +57,5 @@ export async function registerForPushNotificationsAsync() {
 
   }
 
-  return token;
+  return undefined;
 }
