@@ -13,7 +13,7 @@ type Props = {
 };
 
 export default function SignIn({ navigation }: Props) {
-  const { setEmail: setGlobalEmail } = useAuth();
+  const { setEmail: setGlobalEmail, usersDb, userProfile, setUserProfile } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -34,7 +34,18 @@ export default function SignIn({ navigation }: Props) {
       setError('Password must contain at least 8 characters, one uppercase, one number and one special character');
       return;
     }
-    setGlobalEmail(email);
+    
+    const userEmail = email.toLowerCase();
+    setGlobalEmail(userEmail);
+    
+    // Check if we have the name stored from SignUp
+    if (usersDb[userEmail]) {
+      setUserProfile({ ...userProfile, name: usersDb[userEmail], email: userEmail });
+    } else {
+      // Fallback if email wasn't found in mock DB (e.g. they didn't sign up this session)
+      setUserProfile({ ...userProfile, name: email.split('@')[0], email: userEmail });
+    }
+    
     navigation.replace('HomeScreen');
   };
 

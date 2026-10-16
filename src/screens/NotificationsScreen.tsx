@@ -12,16 +12,7 @@ type Props = {
 };
 
 export default function NotificationsScreen({ navigation }: Props) {
-  const { notifications, markAllAsRead } = useNotifications();
-
-  useEffect(() => {
-    // Mark notifications as read when the user LEAVES the screen, 
-    // so they can see which ones were unread while they are viewing it.
-    const unsubscribe = navigation.addListener('blur', () => {
-      markAllAsRead();
-    });
-    return unsubscribe;
-  }, [navigation, markAllAsRead]);
+  const { notifications, markAsRead } = useNotifications();
 
   const renderIcon = (type: string) => {
     switch (type) {
@@ -56,19 +47,26 @@ export default function NotificationsScreen({ navigation }: Props) {
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContainer}
           renderItem={({ item }) => (
-            <View style={[styles.notificationCard, !item.isRead && styles.unreadCard]}>
+            <TouchableOpacity 
+              style={[styles.notificationCard, !item.isRead && styles.unreadCard]}
+              onPress={() => {
+                markAsRead(item.id);
+                navigation.navigate('NotificationDetail' as any, { notification: item });
+              }}
+              activeOpacity={0.7}
+            >
               <View style={styles.iconContainer}>
                 {renderIcon(item.type)}
               </View>
               <View style={styles.textContainer}>
-                <Text style={styles.title}>{item.title}</Text>
-                <Text style={styles.message}>{item.message}</Text>
+                <Text style={styles.title} numberOfLines={1}>{item.title}</Text>
+                <Text style={styles.message} numberOfLines={2}>{item.message}</Text>
                 <Text style={styles.timestamp}>
                   {new Date(item.timestamp).toLocaleString()}
                 </Text>
               </View>
               {!item.isRead && <View style={styles.unreadDot} />}
-            </View>
+            </TouchableOpacity>
           )}
         />
       )}

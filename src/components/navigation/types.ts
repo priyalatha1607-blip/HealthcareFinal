@@ -22,4 +22,6 @@ export type RootStackParamList = {
   PrivacyPolicy: undefined;
   HealthConsent: undefined;
   DoctorProfile: { doctor: any };
+  EditAppointment: { appointmentId: string };
+  NotificationDetail: { notification: any };
 };

@@ -10,6 +10,8 @@ import ForgotPassword from '../../screens/ForgotPassword';
 import OTPScreen from '../../screens/OTPScreen';
 import ResetPasswordScreen from '../../screens/ResetPasswordScreen';
 import BookAppointmentScreen from '../../screens/BookAppointmentScreen';
+import EditAppointmentScreen from '../../screens/EditAppointmentScreen';
+import NotificationDetailScreen from '../../screens/NotificationDetailScreen';
 
 import NotificationsScreen from '../../screens/NotificationsScreen';
 import SettingsScreen from '../../screens/SettingsScreen';
@@ -37,10 +39,16 @@ export default function AppNavigator() {
       <Stack.Screen name="OTPScreen" component={OTPScreen} />
       <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} />
       <Stack.Screen name="BookAppointment" component={BookAppointmentScreen} />
+      <Stack.Screen name="EditAppointment" component={EditAppointmentScreen} />
       
       <Stack.Screen 
         name="Notifications" 
         component={NotificationsScreen} 
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen 
+        name="NotificationDetail" 
+        component={NotificationDetailScreen} 
         options={{ headerShown: false }}
       />
       <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />

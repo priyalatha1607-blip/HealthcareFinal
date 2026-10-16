@@ -14,7 +14,7 @@ type Props = {
 };
 
 export default function SignUp({ navigation }: Props) {
-  const { setEmail: setGlobalEmail } = useAuth();
+  const { setEmail: setGlobalEmail, usersDb, setUsersDb, userProfile, setUserProfile } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -36,7 +36,14 @@ export default function SignUp({ navigation }: Props) {
       setError('Password must contain at least 8 characters, one uppercase, one number and one special character');
       return;
     }
-    setGlobalEmail(email);
+    
+    // Save to mock DB
+    setUsersDb({ ...usersDb, [email.toLowerCase()]: name });
+    
+    // Auto-login after signup
+    setGlobalEmail(email.toLowerCase());
+    setUserProfile({ ...userProfile, name, email: email.toLowerCase() });
+    
     navigation.replace('SignIn');
   };
 
@@ -48,10 +55,12 @@ export default function SignUp({ navigation }: Props) {
       >
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-            <MaterialCommunityIcons name="arrow-left" size={24} color={COLORS.text} />
-          </TouchableOpacity>
-          <Text style={styles.title}>Create Account</Text>
+          <View style={styles.titleRow}>
+            <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+              <MaterialCommunityIcons name="arrow-left" size={28} color={COLORS.text} />
+            </TouchableOpacity>
+            <Text style={styles.title}>Create Account</Text>
+          </View>
           <Text style={styles.subtitle}>Sign up to get started</Text>
         </View>
 
@@ -117,21 +126,26 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   header: {
-    marginTop: 60,
-    marginBottom: 40,
+    marginTop: 30,
+    marginBottom: 24,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
   },
   backButton: {
-    marginBottom: 16,
+    marginRight: 12,
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: 'bold',
     color: COLORS.text,
-    marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
     color: COLORS.textLight,
+    marginLeft: 40,
   },
   form: {
     flex: 1,

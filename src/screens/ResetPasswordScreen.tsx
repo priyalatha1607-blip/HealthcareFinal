@@ -36,13 +36,15 @@ export default function ResetPasswordScreen({ navigation }: Props) {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons name="arrow-back" size={24} color={COLORS.text} />
-        </TouchableOpacity>
-        <Text style={styles.title}>Set New Password</Text>
+        <View style={styles.titleRow}>
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Ionicons name="arrow-back" size={28} color={COLORS.text} />
+          </TouchableOpacity>
+          <Text style={styles.title}>Set New Password</Text>
+        </View>
         <Text style={styles.subtitle}>Enter a strong password for your account</Text>
       </View>
 
@@ -85,21 +87,26 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   header: {
-    marginTop: 60,
-    marginBottom: 40,
+    marginTop: 80,
+    marginBottom: 32,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
   },
   backButton: {
-    marginBottom: 16,
+    marginRight: 12,
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: 'bold',
     color: COLORS.text,
-    marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
     color: COLORS.textLight,
+    marginLeft: 40,
   },
   form: {
     flex: 1,

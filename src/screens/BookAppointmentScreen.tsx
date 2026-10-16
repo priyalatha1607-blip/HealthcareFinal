@@ -21,7 +21,7 @@ import { useAppointments } from '../context/AppointmentContext';
 import { useNotifications } from '../context/NotificationContext';
 import { COLORS } from '../constants/colors';
 import CustomModal from '../components/CustomModal';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import CustomDatePicker from '../components/CustomDatePicker';
 
 const doctorsList = [
   { id: '1', name: 'Dr. Jane Smith', specialty: 'Cardiologist', image: 'https://i.pravatar.cc/150?img=47' },
@@ -258,21 +258,18 @@ export default function BookAppointmentScreen({ navigation, route }: any) {
           </View>
         </View>
       </Modal>
-      {showDateModal && (
-        <DateTimePicker
-          value={form.date ? new Date(form.date) : new Date()}
-          mode="date"
-          display="default"
-          minimumDate={new Date()}
-          onChange={(event: any, selectedDate?: Date) => {
-            setShowDateModal(false);
-            if (event.type === 'set' && selectedDate) {
-              const formattedDate = selectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-              setForm({ ...form, date: formattedDate });
-            }
-          }}
-        />
-      )}
+      <CustomDatePicker
+        visible={showDateModal}
+        value={form.date ? new Date(form.date) : new Date()}
+        onClose={() => setShowDateModal(false)}
+        onChange={(selectedDate) => {
+          setShowDateModal(false);
+          if (selectedDate) {
+            const formattedDate = selectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            setForm({ ...form, date: formattedDate });
+          }
+        }}
+      />
   
       <CustomModal 
         visible={modalVisible}

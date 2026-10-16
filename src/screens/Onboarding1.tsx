@@ -15,21 +15,21 @@ const ONBOARDING_WELCOME_IMAGE_URL = 'https://images.unsplash.com/photo-15760911
 export default function Onboarding1({ navigation }: Props) {
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
+      <View style={styles.centerWrapper}>
         <View style={styles.logoPlaceholder}>
           <MaterialCommunityIcons name="hand-heart" size={56} color={COLORS.primary} />
         </View>
         <Text style={styles.title}>Healthcare</Text>
         <Image 
           source={{ uri: ONBOARDING_WELCOME_IMAGE_URL }} 
-          style={{ width: 250, height: 250, resizeMode: 'contain', marginTop: 40 }} 
+          style={{ width: 220, height: 220, resizeMode: 'contain', marginTop: 30 }} 
+        />
+        <CustomButton 
+          title="Next" 
+          onPress={() => navigation.navigate('Onboarding2')} 
+          style={{ marginTop: 40, width: '100%' }}
         />
       </View>
-      <CustomButton 
-        title="Next" 
-        onPress={() => navigation.navigate('Onboarding2')} 
-        style={{ marginBottom: 32 }}
-      />
     </View>
   );
 }
@@ -38,13 +38,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.white,
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     padding: 24,
   },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
+  centerWrapper: {
     alignItems: 'center',
+    justifyContent: 'center',
   },
   logoPlaceholder: {
     width: 100,

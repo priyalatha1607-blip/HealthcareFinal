@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -13,8 +13,16 @@ const dummyAppointments = [
 import { useAppointments } from '../context/AppointmentContext';
 import { useNotifications } from '../context/NotificationContext';
 import { COLORS } from '../constants/colors';
+import CustomModal from '../components/CustomModal';
 
-export default function AppointmentsScreen() {
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../components/navigation/types';
+
+type Props = {
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Appointments'>;
+};
+
+export default function AppointmentsScreen({ navigation }: Props) {
   const { appointments, cancelAppointment } = useAppointments();
   const { addNotification } = useNotifications();
   
@@ -24,36 +32,38 @@ export default function AppointmentsScreen() {
     ...dummyAppointments.filter(da => !appointments.find(a => a.id === da.id.toString()))
   ];
 
-  const handleCancel = (id: string | number) => {
-    Alert.alert('Cancel Appointment', 'Are you sure you want to cancel this appointment?', [
-      { text: 'No', style: 'cancel' },
-      { text: 'Yes', style: 'destructive', onPress: () => {
-        if (typeof id === 'string') {
-          const apt = appointments.find(a => a.id === id);
-          cancelAppointment(id);
-          if (apt) {
-            addNotification(
-              'Appointment Cancelled',
-              `Your appointment with ${apt.doctor} on ${apt.date} has been cancelled.`,
-              'cancellation'
-            );
-          }
-        } else {
-          // Note: dummy appointments won't actually be removed from the hardcoded array,
-          // but we will inform the user.
-          Alert.alert('Info', 'Cannot cancel dummy appointments.');
-        }
-      }}
-    ]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedAptId, setSelectedAptId] = useState<string | number | null>(null);
+
+  const handleCancelClick = (id: string | number) => {
+    if (typeof id === 'number') {
+      Alert.alert('Info', 'Cannot cancel dummy appointments.');
+      return;
+    }
+    setSelectedAptId(id);
+    setModalVisible(true);
+  };
+
+  const confirmCancel = () => {
+    if (typeof selectedAptId === 'string') {
+      const apt = appointments.find(a => a.id === selectedAptId);
+      cancelAppointment(selectedAptId);
+      if (apt) {
+        addNotification(
+          'Appointment Cancelled',
+          `Your appointment with ${apt.doctor} on ${apt.date} has been cancelled.`,
+          'cancellation'
+        );
+      }
+    }
+    setModalVisible(false);
+    setSelectedAptId(null);
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-        <View style={styles.logoContainer}>
-          <MaterialCommunityIcons name="hand-heart" size={32} color={COLORS.primary} style={styles.logoIcon} />
-          <Text style={styles.headerTitle}>Healthcare</Text>
-        </View>
+        <Text style={styles.headerTitle}>Appointments</Text>
       </View>
       <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent}>
         <Text style={styles.pageTitle}>My Appointments</Text>
@@ -84,7 +94,15 @@ export default function AppointmentsScreen() {
               </View>
               
               <View style={styles.cardFooter}>
-                <TouchableOpacity style={styles.cancelButton} onPress={() => handleCancel(apt.id)}>
+                {typeof apt.id === 'string' ? (
+                  <TouchableOpacity 
+                    style={styles.editButton} 
+                    onPress={() => navigation.navigate('EditAppointment', { appointmentId: apt.id })}
+                  >
+                    <Text style={styles.editButtonText}>Edit</Text>
+                  </TouchableOpacity>
+                ) : null}
+                <TouchableOpacity style={styles.cancelButton} onPress={() => handleCancelClick(apt.id)}>
                   <Text style={styles.cancelButtonText}>Cancel</Text>
                 </TouchableOpacity>
               </View>
@@ -92,6 +110,21 @@ export default function AppointmentsScreen() {
           ))
         )}
       </ScrollView>
+
+      <CustomModal
+        visible={modalVisible}
+        title="Cancel Appointment"
+        message="Are you sure you want to cancel this appointment?"
+        icon="alert-circle"
+        iconColor={COLORS.errorDark}
+        confirmText="Yes, Cancel"
+        onConfirm={confirmCancel}
+        cancelText="No, Keep it"
+        onCancel={() => {
+          setModalVisible(false);
+          setSelectedAptId(null);
+        }}
+      />
     </SafeAreaView>
   );
 }
@@ -196,7 +229,22 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: COLORS.borderDivider,
     paddingTop: 12,
-    alignItems: 'flex-end',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  editButton: {
+    paddingVertical: 6,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+    borderRadius: 8,
+    marginRight: 10,
+  },
+  editButtonText: {
+    color: COLORS.primary,
+    fontWeight: 'bold',
+    fontSize: 13,
   },
   cancelButton: {
     paddingVertical: 6,

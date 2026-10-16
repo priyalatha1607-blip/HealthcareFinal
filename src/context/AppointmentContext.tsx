@@ -19,6 +19,7 @@ export interface Appointment {
 interface AppointmentContextType {
   appointments: Appointment[];
   addAppointment: (appointment: Omit<Appointment, 'id'>) => void;
+  editAppointment: (id: string, updatedData: Partial<Appointment>) => void;
   cancelAppointment: (id: string) => void;
 }
 
@@ -59,13 +60,17 @@ export const AppointmentProvider = ({ children }: { children: ReactNode }) => {
     saveAppointments([...appointments, newAppointment]);
   };
 
+  const editAppointment = (id: string, updatedData: Partial<Appointment>) => {
+    saveAppointments(appointments.map((app) => (app.id === id ? { ...app, ...updatedData } : app)));
+  };
+
   const cancelAppointment = (id: string) => {
     saveAppointments(appointments.filter((app) => app.id !== id));
   };
 
 
   return (
-    <AppointmentContext.Provider value={{ appointments, addAppointment, cancelAppointment }}>
+    <AppointmentContext.Provider value={{ appointments, addAppointment, editAppointment, cancelAppointment }}>
       {children}
     </AppointmentContext.Provider>
   );

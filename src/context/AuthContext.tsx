@@ -23,6 +23,8 @@ type AuthContextType = {
   setEmail: (email: string | null) => void;
   userProfile: UserProfile;
   setUserProfile: (profile: UserProfile) => void;
+  usersDb: Record<string, string>;
+  setUsersDb: (db: Record<string, string>) => void;
 };
 
 const defaultProfile: UserProfile = {
@@ -38,14 +40,17 @@ const AuthContext = createContext<AuthContextType>({
   setEmail: () => {},
   userProfile: defaultProfile,
   setUserProfile: () => {},
+  usersDb: { 'priya@gmail.com': 'Priya' },
+  setUsersDb: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [email, setEmail] = useState<string | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile>(defaultProfile);
+  const [usersDb, setUsersDb] = useState<Record<string, string>>({ 'priya@gmail.com': 'Priya' });
 
   return (
-    <AuthContext.Provider value={{ email, setEmail, userProfile, setUserProfile }}>
+    <AuthContext.Provider value={{ email, setEmail, userProfile, setUserProfile, usersDb, setUsersDb }}>
       {children}
     </AuthContext.Provider>
   );

@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../constants/colors';
 import CustomButton from '../components/CustomButton';
 import OTPInput from '../components/OTPInput';
+import CustomModal from '../components/CustomModal';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'OTPScreen'>;
@@ -17,6 +18,7 @@ export default function OTPScreen({ navigation, route }: Props) {
   const [otp, setOtp] = useState('');
   const [error, setError] = useState('');
   const [timeLeft, setTimeLeft] = useState(30);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     if (timeLeft > 0) {
@@ -43,7 +45,7 @@ export default function OTPScreen({ navigation, route }: Props) {
   const handleResendOTP = () => {
     setTimeLeft(30);
     setOtp('');
-    Alert.alert('Success', 'A new OTP has been sent to your email.');
+    setModalVisible(true);
   };
 
   return (
@@ -52,13 +54,15 @@ export default function OTPScreen({ navigation, route }: Props) {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons name="arrow-back" size={24} color={COLORS.text} />
-        </TouchableOpacity>
-        <Text style={styles.title}>Enter OTP</Text>
+        <View style={styles.titleRow}>
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Ionicons name="arrow-back" size={28} color={COLORS.text} />
+          </TouchableOpacity>
+          <Text style={styles.title}>Enter OTP</Text>
+        </View>
         <Text style={styles.subtitle}>We've sent a code to {email}</Text>
       </View>
 
@@ -84,6 +88,16 @@ export default function OTPScreen({ navigation, route }: Props) {
           </TouchableOpacity>
         )}
       </View>
+      
+      <CustomModal
+        visible={modalVisible}
+        title="Success"
+        message="A new OTP has been sent to your email."
+        icon="check-circle"
+        iconColor={COLORS.primary}
+        confirmText="OK"
+        onConfirm={() => setModalVisible(false)}
+      />
     </KeyboardAvoidingView>
   );
 }
@@ -95,21 +109,26 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   header: {
-    marginTop: 60,
-    marginBottom: 40,
+    marginTop: 80,
+    marginBottom: 24,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
   },
   backButton: {
-    marginBottom: 16,
+    marginRight: 12,
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: 'bold',
     color: COLORS.text,
-    marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
     color: COLORS.textLight,
+    marginLeft: 40,
   },
   form: {
     flex: 1,
